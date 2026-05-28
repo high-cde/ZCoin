@@ -1,21 +1,21 @@
 use crate::zlang_tokenizer::{Token};
 
-#[derive(Debug)]
-pub enum ZAst {
+#[derive(Debug, Clone)]
+pub enum Ast {
     Number(i64),
-    Add(Box<ZAst>, Box<ZAst>),
+    Ident(String),
+    BinaryOp {
+        left: Box<Ast>,
+        op: String,
+        right: Box<Ast>,
+    },
 }
 
-pub fn parse(tokens: &[Token]) -> Result<ZAst, String> {
-    if tokens.len() == 3 {
-        if let Token::Number(a) = tokens[0].clone() {
-            if let Token::Plus = tokens[1] {
-                if let Token::Number(b) = tokens[2].clone() {
-                    return Ok(ZAst::Add(Box::new(ZAst::Number(a)), Box::new(ZAst::Number(b))));
-                }
-            }
-        }
+pub fn parse(tokens: &[Token]) -> Ast {
+    // Parser minimale: restituisce solo il primo token
+    match tokens.first() {
+        Some(Token::Number(n)) => Ast::Number(*n),
+        Some(Token::Ident(s)) => Ast::Ident(s.clone()),
+        _ => Ast::Number(0),
     }
-
-    Err("parse error".into())
 }
