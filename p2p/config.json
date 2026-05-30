@@ -1,0 +1,12 @@
+{
+  "network": "mainnet",
+  "p2p_port": 9001,
+  "max_peers": 64,
+  "seed_nodes": [
+    "http://5.189.180.13:8091/nodes.json"
+  ],
+  "handshake": {
+    "protocol_version": 1,
+    "network_id": "highcoin-mainnet"
+  }
+}

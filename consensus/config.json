@@ -1,0 +1,7 @@
+{
+  "network": "mainnet",
+  "block_time": 10,
+  "reward": 50,
+  "halving_interval": 210000,
+  "difficulty_target": "00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+}

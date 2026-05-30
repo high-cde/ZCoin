@@ -1,0 +1,22 @@
+{
+  "description": "HighCoin P2P protocol high-level spec",
+  "handshake": {
+    "fields": [
+      "protocol_version",
+      "network_id",
+      "node_id",
+      "best_height",
+      "best_hash"
+    ]
+  },
+  "messages": [
+    "PING",
+    "PONG",
+    "GET_BLOCKS",
+    "BLOCKS",
+    "GET_TXS",
+    "TXS",
+    "NEW_BLOCK",
+    "NEW_TX"
+  ]
+}

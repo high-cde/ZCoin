@@ -1,0 +1,15 @@
+{
+  "description": "HighCoin block format specification",
+  "header": {
+    "parent_hash": "hash of previous block",
+    "number": "block height",
+    "timestamp": "unix timestamp",
+    "merkle_root": "merkle root of transactions",
+    "state_root": "root hash of state (if applicable)",
+    "difficulty": "current difficulty",
+    "nonce": "mining/staking nonce or proof data"
+  },
+  "body": {
+    "transactions": "ordered list of transactions"
+  }
+}

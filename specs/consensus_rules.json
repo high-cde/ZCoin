@@ -1,0 +1,18 @@
+{
+  "description": "HighCoin consensus high-level rules (no implementation)",
+  "block_validation": [
+    "parent exists and is valid",
+    "timestamp is not too far in the future",
+    "difficulty matches expected",
+    "merkle_root matches transactions",
+    "all transactions are valid"
+  ],
+  "tx_validation": [
+    "no double spend (per state model)",
+    "signatures valid",
+    "fees non-negative",
+    "no overflow in balances"
+  ],
+  "fork_choice": "e.g. longest chain, most work, or custom rule",
+  "reward_model": "block reward, fees, halving schedule"
+}

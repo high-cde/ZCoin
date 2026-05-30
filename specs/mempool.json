@@ -1,0 +1,10 @@
+{
+  "description": "HighCoin mempool behavior specification",
+  "rules": {
+    "max_txs": "maximum number of pending transactions",
+    "max_size_bytes": "maximum total mempool size",
+    "min_fee": "minimum fee per tx (if applicable)",
+    "eviction_policy": "e.g. lowest fee, oldest, etc.",
+    "relay_policy": "when to relay tx to peers"
+  }
+}

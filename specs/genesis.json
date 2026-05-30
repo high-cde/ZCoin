@@ -1,0 +1,13 @@
+{
+  "chain_id": "highcoin-mainnet",
+  "version": 1,
+  "description": "HighCoin mainnet genesis specification",
+  "fields": {
+    "chain_id": "string - unique network identifier",
+    "version": "integer - genesis format version",
+    "timestamp": "unix timestamp of genesis creation",
+    "initial_supply": "total supply at genesis",
+    "genesis_hash": "hash of genesis block header",
+    "alloc": "map of initial allocations"
+  }
+}

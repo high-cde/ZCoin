@@ -1,1 +1,1 @@
-/data/data/com.termux/files/home/Highcoin/target/release/bridgez-cli: /data/data/com.termux/files/home/Highcoin/tools/bridgez-cli/src/main.rs
+/root/HighCoin/target/release/bridgez-cli: /root/HighCoin/tools/bridgez-cli/src/main.rs
