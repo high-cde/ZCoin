@@ -117,3 +117,4 @@ highcoin-node-cli info
 
 HighCoin è il motore quantistico dell’intero ecosistema ZDOS.
 
+<!-- force rebuild Sun May 31 13:17:32 CEST 2026 -->
