@@ -110,3 +110,4 @@ highcoin-node-cli info
 HighCoin non è solo una chain:  
 è il <b>motore meccanico‑quantistico</b> dell’ecosistema ZDOS, orchestrato da DSN e controllato da te.
 
+<!-- force Sun May 31 13:35:54 CEST 2026 -->
