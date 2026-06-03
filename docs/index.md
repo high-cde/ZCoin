@@ -1,71 +1,31 @@
-# HighCoin — Quantum Portal
+<link rel="stylesheet" href="zdos.css">
+
+<div class="container">
+
+# HighCoin — Quantum Portal (ZDOS Edition)
 
 Benvenuto nel portale ufficiale di HighCoin.
-
-Questo sito rappresenta il punto di accesso al nuovo ecosistema:
-- HighCoin Mainnet
-- DSN Gateway
-- Z-Lang Runtime
-- BlockZLang PoW Engine
-- Token Factory Layer
 
 ---
 
 ## Documentazione
 
 - [Quantum Gateway](quantum-gateway.md)
-- [Token Factory](token-factory.md)
-- [Z-Lang Examples](zlang-examples.md)
-- [Mining Engine](mining-engine.md)
+- [HighCoin Faucet](faucet.html)
 
 ---
 
 ## Stato della rete
 
-La rete HighCoin è in fase di inizializzazione.
-
-Componenti attivi:
-- DSN Gateway
-- Z-Lang Compiler
-- BlockZLang PoW Engine
-- HighVM Runtime
-
-Componenti in attesa:
-- Token Factory UI
-- Mining Live Feed
-- Z-Lang Editor
+- DSN Gateway: attivo
+- Z-Lang Compiler: attivo
+- BlockZLang PoW Engine: attivo
+- HighVM Runtime: attivo
 
 ---
 
 ## Visione
 
-HighCoin non è una moneta.
-È un motore di esecuzione distribuito.
+HighCoin è un motore di esecuzione distribuito basato su Z-Lang e BlockZLang.
 
-Ogni blocco contiene:
-- transazioni
-- logica
-- micro-programmi Z-Lang
-- seed di consenso
-- firma del nodo
-
-Il mining non è solo hash.
-È esecuzione di codice.
-
----
-
-## Prossimi moduli
-
-- DSN Pulse Monitor
-- Z-Lang Interactive Editor
-- Token Factory Generator
-- Mining Live Feed
-- HighVM Inspector
-
----
-
-## Contatti
-
-Repository ufficiale:
-https://github.com/high-cde/HighCoin
-- [HighCoin Faucet](faucet.html)
+</div>
