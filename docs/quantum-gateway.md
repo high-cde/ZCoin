@@ -1,7 +1,5 @@
 # HighCoin Quantum Gateway
-Il futuro non arriva. Si compila.
 
-## DSN Gateway — Distributed Sovereign Network
 Il DSN Gateway è il punto di accesso al nuovo ecosistema HighCoin.
 
 Collega:
@@ -11,28 +9,17 @@ Collega:
 - ZDOS Core
 - Token Factory Layer
 
-Ogni richiesta che attraversa il DSN Gateway viene:
+Ogni richiesta viene:
 1. Validata
 2. Compilata
 3. Eseguita
 4. Firmata
 5. Propagata nella rete
 
-## HighCoin — La moneta che esegue codice
-HighCoin non è solo un asset.
-È un motore di esecuzione distribuito.
+---
 
-Ogni blocco contiene:
-- transazioni
-- logica
-- micro-programmi BlockZLang
-- seed di consenso
-- firma del nodo
+## Esempio Token in Z-Lang
 
-## Token Factory (ispirata a POA Network 2017)
-"Un token può essere generato da un contratto, non da una autorità."
-
-### Esempio di Token in Z-Lang
 token MyToken {
     name: "Quantum Sparks"
     symbol: "QSPK"
@@ -40,9 +27,12 @@ token MyToken {
     decimals: 8
 }
 
-## Attesa palpabile
+---
+
+## Stato del Gateway
+
 Il Quantum Gateway sta:
 - generando seed BlockZLang
+- sincronizzando nodi DSN
 - preparando la Token Factory
-- sincronizzando i nodi DSN
 - calibrando la difficoltà PoW
