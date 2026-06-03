@@ -28,13 +28,3 @@ func validate_transfer(tx: map) -> bool {
 
     return true
 }
-
-// --- ZLANG GUARD HOOK (template) ---
-// Importa e usa guard_tx(tx) da system.guard.zlang
-// Esempio (adatta alla sintassi ZLang reale):
-//
-//   if !guard_tx(tx) {
-//       return false;
-//   }
-//
-// Questo rende il validator dipendente dal layer di guardia.

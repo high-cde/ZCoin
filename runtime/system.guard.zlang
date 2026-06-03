@@ -1,0 +1,48 @@
+// system.guard.zlang
+// HighCoin ZLang Guardian Layer
+//
+// Questo modulo NON garantisce "inattaccabilità",
+// ma introduce vincoli duri su fee, size, e sender.
+
+const MIN_FEE_SAT      = 1000;      // fee minima
+const MAX_TX_BYTES     = 32768;     // dimensione massima tx
+const MAX_OUTPUTS      = 64;        // numero massimo di output
+const MAX_INPUTS       = 64;        // numero massimo di input
+const MAX_PER_BLOCK_TX = 5000;      // limite soft per blocco (se usato lato miner)
+
+fn is_blacklisted(addr: Address) -> Bool {
+    // TODO: popola lista nera on-chain / config
+    // return addr == 0xDEAD... || addr == 0xBADC0DE...;
+    return false;
+}
+
+fn basic_tx_sanity(tx: Tx) -> Bool {
+    if tx.fee < MIN_FEE_SAT {
+        return false;
+    }
+    if tx.size_bytes > MAX_TX_BYTES {
+        return false;
+    }
+    if len(tx.inputs)  > MAX_INPUTS {
+        return false;
+    }
+    if len(tx.outputs) > MAX_OUTPUTS {
+        return false;
+    }
+    if is_blacklisted(tx.sender) {
+        return false;
+    }
+    return true;
+}
+
+// Entry point suggerito da richiamare dal validator principale
+fn guard_tx(tx: Tx) -> Bool {
+    if !basic_tx_sanity(tx) {
+        return false;
+    }
+    // Qui puoi aggiungere:
+//  - anti‑spam per address
+//  - limiti per script complessi
+//  - controlli su opcodes ZLang
+    return true;
+}
