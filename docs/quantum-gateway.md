@@ -1,7 +1,3 @@
-<link rel="stylesheet" href="boot.css">
-<script src="boot.js"></script>
-<div id="boot-screen"></div>
-
 <link rel="stylesheet" href="zdos.css">
 
 <div class="container">
@@ -13,13 +9,25 @@ Il DSN Gateway collega:
 - Z-Lang Runtime
 - BlockZLang PoW Engine
 - ZDOS Core
+- Token Factory Layer
 
 ---
 
 ## Stato
 
-- Seed BlockZLang: attivo
-- Sincronizzazione nodi: attiva
-- Token Factory: in preparazione
+- Seed BlockZLang: attivo  
+- Sincronizzazione nodi: attiva  
+- Token Factory: in preparazione  
+
+---
+
+## Flusso
+
+1. Richiesta in ingresso  
+2. Validazione  
+3. Compilazione Z-Lang  
+4. Esecuzione in HighVM  
+5. Firma  
+6. Propagazione nella rete  
 
 </div>
