@@ -10,3 +10,5 @@ Benvenuto nell'universo **HighCoin**.
 - [Wallet & TX](./wallet-tx.md)
 
 Il sito ufficiale è: **https://x-zdos.it**
+
+- [Bridge DSN](./bridge-dsn.md)

@@ -1,0 +1,75 @@
+// bridge.dsn.zlang
+// HighCoin → DSN (Polygon) bridge layer
+//
+// Obiettivo:
+//  - registrare lock di HGC on-chain
+//  - produrre un record deterministico leggibile da un relayer
+//  - permettere estensione verso ETH/BSC/etc.
+
+const CHAIN_POLYGON = 137;
+const CHAIN_ETH     = 1;
+const CHAIN_BSC     = 56;
+
+struct BridgeLock {
+    id:        Bytes32;   // hash univoco lock
+    sender:    Address;   // address HighCoin
+    dest_chain: U64;      // es. 137 = Polygon
+    dest_addr: Bytes;     // address EVM (20 bytes)
+    amount:    U128;      // amount HGC lockato
+    nonce:     U64;       // anti-replay
+    ts:        U64;       // timestamp blocco
+}
+
+fn build_lock_id(sender: Address, dest_chain: U64, dest_addr: Bytes, amount: U128, nonce: U64, ts: U64) -> Bytes32 {
+    // Pseudo: hash di tutti i campi
+    return hash(sender, dest_chain, dest_addr, amount, nonce, ts);
+}
+
+// Entry point da richiamare dal validator / tx-apply
+// quando una tx speciale "bridge_lock" viene rilevata.
+fn bridge_lock_tx(tx: Tx) -> BridgeLock {
+    // Assunzione: tx.data contiene:
+    //  - dest_chain (U64)
+    //  - dest_addr  (Bytes, 20 bytes EVM)
+    //  - amount     (U128)
+    //  - nonce      (U64)
+
+    let dest_chain = tx.data.read_u64(0);
+    let dest_addr  = tx.data.read_bytes(8, 20);
+    let amount     = tx.data.read_u128(28);
+    let nonce      = tx.data.read_u64(44);
+
+    if amount <= 0 {
+        fail("bridge: amount <= 0");
+    }
+
+    if dest_chain != CHAIN_POLYGON && dest_chain != CHAIN_ETH && dest_chain != CHAIN_BSC {
+        fail("bridge: dest_chain not allowed");
+    }
+
+    let ts = now(); // timestamp blocco
+    let id = build_lock_id(tx.sender, dest_chain, dest_addr, amount, nonce, ts);
+
+    let lock = BridgeLock {
+        id:         id,
+        sender:     tx.sender,
+        dest_chain: dest_chain,
+        dest_addr:  dest_addr,
+        amount:     amount,
+        nonce:      nonce,
+        ts:         ts
+    };
+
+    // TODO (da implementare nella tua VM):
+    //  - scrivere lock in storage: bridge_locks[id] = lock
+    //  - emettere event: BridgeLockCreated(id, sender, dest_chain, dest_addr, amount, nonce, ts)
+    //  - bloccare/burnare amount HGC dal balance di sender
+
+    return lock;
+}
+
+// In futuro:
+// fn bridge_unlock_proof(proof: Bytes) -> Bool {
+//   // verifica proof proveniente da Polygon/ETH/BSC
+//   // e sblocca HGC lato HighCoin
+// }
