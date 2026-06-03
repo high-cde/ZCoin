@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="boot.css">
+<script src="boot.js"></script>
+<div id="boot-screen"></div>
+
 <link rel="stylesheet" href="zdos.css">
 
 <div class="container">
