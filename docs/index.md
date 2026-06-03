@@ -1,1 +1,0 @@
-- [HighCoin Quantum Gateway](quantum-gateway.md)

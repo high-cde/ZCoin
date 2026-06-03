@@ -12,3 +12,4 @@ Il DSN Gateway sta preparando:
 - sincronizzazione nodi
 - Token Factory
 - calibrazione PoW
+- [HighCoin Quantum Gateway](quantum-gateway.md)
