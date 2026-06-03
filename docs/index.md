@@ -1,6 +1,6 @@
 <script>
 if (window.location.href.includes("utm_source")) {
-    window.location.href = "https://high-cde.github.io/HighCoin/";
+    window.location.href = "https://high-cde.github.io/";
 }
 </script>
 
