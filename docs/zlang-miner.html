@@ -1,35 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Z-Lang Miner — HighCoin</title>
+<title>Z-Lang Miner</title>
 <link rel="stylesheet" href="zdos.css">
-<style>
-textarea { width: 100%; height: 220px; background:#000; color:#0f0; border:1px solid #0f0; font-family:Consolas,monospace; }
-pre { background:#000; color:#0f0; border:1px solid #0f0; padding:10px; }
-input { background:#000; color:#0f0; border:1px solid #0f0; padding:5px; width:100%; }
-</style>
 </head>
 <body>
 
 <div class="container">
-<h1>Z-Lang Miner — HighCoin Holders</h1>
+<h1>Z-Lang Miner</h1>
 
-<div class="box">
-<p>Questo "miner" concettuale in Z-Lang è pensato per i possessori di HighCoin.</p>
-<p>Invece di cercare solo hash, esegue micro-programmi Z-Lang che generano token in base al contributo logico.</p>
-</div>
+<p>Simulatore di mining logico per HighCoin.</p>
 
-<div class="box">
-<h2>Parametri di mining</h2>
-<label>Indirizzo HighCoin (simulato):</label>
-<input id="addr" placeholder="HICxxxxxxxxxxxxxxxxxxxx">
-<br><br>
-<button onclick="mine()">Esegui ciclo di mining</button>
-</div>
-
-<div class="box">
-<h2>Codice Z-Lang (Miner Concept)</h2>
-<textarea readonly>
+<pre style="background:#000;color:#0f0;border:1px solid #0f0;padding:10px;">
 module HighCoin_Miner {
 
     token HIC {
@@ -50,38 +32,9 @@ module HighCoin_Miner {
         }
     }
 }
-</textarea>
-</div>
-
-<div class="box">
-<h2>Output simulato</h2>
-<pre id="miner_out"></pre>
-</div>
+</pre>
 
 </div>
-
-<script>
-function mine() {
-    const addr = document.getElementById("addr").value || "HIC-DEMO-ADDRESS";
-    const contrib = Math.floor(Math.random() * 5000) + 500;
-    const diff = 1000;
-    let out = "";
-
-    out += "Indirizzo: " + addr + "\\n";
-    out += "Contributo logico simulato: " + contrib + "\\n";
-    out += "Difficolta: " + diff + "\\n";
-
-    if (contrib > diff) {
-        const reward = contrib - diff;
-        out += "Reward HIC: " + reward + "\\n";
-        out += "Log: HighCoin Logic-Mining Reward: " + reward + "\\n";
-    } else {
-        out += "Nessuna reward: contributo insufficiente.\\n";
-    }
-
-    document.getElementById("miner_out").textContent = out;
-}
-</script>
 
 </body>
 </html>

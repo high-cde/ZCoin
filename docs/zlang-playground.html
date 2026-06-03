@@ -1,26 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Z-Lang Playground — HighCoin</title>
+<title>Z-Lang Playground</title>
 <link rel="stylesheet" href="zdos.css">
-<style>
-textarea { width: 100%; height: 260px; background:#000; color:#0f0; border:1px solid #0f0; font-family:Consolas,monospace; }
-pre { background:#000; color:#0f0; border:1px solid #0f0; padding:10px; }
-</style>
 </head>
 <body>
 
 <div class="container">
-<h1>Z-Lang Playground — DSN Resonance</h1>
+<h1>Z-Lang Playground</h1>
 
-<div class="box">
-<p>Modulo concettuale Z-Lang collegato al token DSN (0xfc90516a1f736FaC557e09D8853dB80dA192c296).</p>
-<p>Genera "microtoken" temporanei in risposta alle variazioni di saldo DSN.</p>
-</div>
-
-<div class="box">
-<h2>Codice Z-Lang</h2>
-<textarea id="code">
+<textarea style="width:100%;height:260px;background:#000;color:#0f0;border:1px solid #0f0;">
 module DSN_Resonance {
 
     token DSN {
@@ -49,29 +38,8 @@ module DSN_Resonance {
     }
 }
 </textarea>
-</div>
-
-<div class="box">
-<h2>Simulazione concettuale</h2>
-<button onclick="simulate()">Simula variazione saldo</button>
-<pre id="output"></pre>
-</div>
 
 </div>
-
-<script>
-function simulate() {
-    const out = document.getElementById("output");
-    out.textContent =
-        "Simulazione DSN Resonance:\\n" +
-        "- Blocco N: saldo DSN = 1000\\n" +
-        "- Blocco N+1: saldo DSN = 1300\\n" +
-        "- Delta = 300\\n" +
-        "- microtoken.spawn(supply=300, ttl=1)\\n" +
-        "- log: DSN Resonance Pulse: 300\\n\\n" +
-        "Nella HighVM reale, il modulo reagirebbe ad ogni blocco alle variazioni di saldo DSN.";
-}
-</script>
 
 </body>
 </html>
