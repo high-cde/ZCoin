@@ -1,0 +1,5 @@
+{
+  "polygon_rpc": "https://polygon-bor.publicnode.com",
+  "hex_contract": "0x000000000000000000000000000000000000dEaD",
+  "dsn_contract": "0x000000000000000000000000000000000000dEaD"
+}
