@@ -1,10 +1,21 @@
+use tokio::runtime::Runtime;
+
+mod server;
 mod runtime;
 mod rpc;
-mod bridge;
-mod server;
 
-#[tokio::main]
-async fn main() {
+fn main() {
     println!("[*] HighCoin Node starting...");
-    server::start_server().await;
+
+    let rt = Runtime::new().unwrap();
+
+    rt.block_on(async {
+        // 🔥 AVVIA IL BLOCK PRODUCER IN BACKGROUND
+        tokio::spawn(async {
+            runtime::start_block_producer().await;
+        });
+
+        // 🔥 AVVIA IL SERVER RPC
+        server::start_server().await;
+    });
 }

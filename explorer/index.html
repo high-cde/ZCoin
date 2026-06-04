@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HighCoin Explorer ZDOS</title>
+  <style>
+    body { background:#000;color:#0f0;font-family:monospace;padding:20px; }
+    input,button { background:#001100;border:1px solid #0f0;color:#0f0;padding:4px 8px;font-family:monospace; }
+    .section { border:1px solid #0f0;padding:10px;margin-bottom:15px; }
+    pre { background:#001100;padding:10px;overflow-x:auto; }
+    h1 { color:#0f0; }
+  </style>
+</head>
+<body>
+  <h1>HIGHCOIN EXPLORER // ZDOS</h1>
+
+  <div class="section">
+    RPC URL: <input id="rpcUrl" value="http://127.0.0.1:8765" size="40">
+  </div>
+
+  <div class="section">
+    <h2>Status</h2>
+    <button onclick="getStatus()">/status</button>
+    <button onclick="getBlockNumber()">eth_blockNumber</button>
+    <pre id="statusOut"></pre>
+  </div>
+
+  <div class="section">
+    <h2>Block</h2>
+    Height: <input id="blockHeight" value="1" size="8">
+    <button onclick="getBlock()">GET /block/{height}</button>
+    <pre id="blockOut"></pre>
+  </div>
+
+  <div class="section">
+    <h2>Transaction</h2>
+    Hash: <input id="txHash" value="0x" size="40">
+    <button onclick="getTx()">GET /tx/{hash}</button>
+    <pre id="txOut"></pre>
+  </div>
+
+  <div class="section">
+    <h2>Address</h2>
+    Address: <input id="addr" value="0x0000000000000000000000000000000000000000" size="46">
+    <button onclick="getAddress()">GET /address/{addr}</button>
+    <pre id="addrOut"></pre>
+  </div>
+
+<script>
+function rpcUrl(){ return document.getElementById("rpcUrl").value.trim(); }
+
+async function getStatus(){
+  const o=document.getElementById("statusOut");
+  o.textContent="Loading...";
+  try{ o.textContent=JSON.stringify(await (await fetch(rpcUrl()+"/status")).json(),null,2); }
+  catch(e){ o.textContent="Error: "+e; }
+}
+
+async function getBlockNumber(){
+  const o=document.getElementById("statusOut");
+  o.textContent="Loading blockNumber...";
+  try{
+    const r=await fetch(rpcUrl(),{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({jsonrpc:"2.0",method:"eth_blockNumber",params:[],id:1})
+    });
+    o.textContent=JSON.stringify(await r.json(),null,2);
+  }catch(e){ o.textContent="Error: "+e; }
+}
+
+async function getBlock(){
+  const h=document.getElementById("blockHeight").value.trim();
+  const o=document.getElementById("blockOut");
+  o.textContent="Loading block "+h+"...";
+  try{ o.textContent=JSON.stringify(await (await fetch(rpcUrl()+"/block/"+h)).json(),null,2); }
+  catch(e){ o.textContent="Error: "+e; }
+}
+
+async function getTx(){
+  const h=document.getElementById("txHash").value.trim();
+  const o=document.getElementById("txOut");
+  o.textContent="Loading tx "+h+"...";
+  try{ o.textContent=JSON.stringify(await (await fetch(rpcUrl()+"/tx/"+h)).json(),null,2); }
+  catch(e){ o.textContent="Error: "+e; }
+}
+
+async function getAddress(){
+  const a=document.getElementById("addr").value.trim();
+  const o=document.getElementById("addrOut");
+  o.textContent="Loading address "+a+"...";
+  try{ o.textContent=JSON.stringify(await (await fetch(rpcUrl()+"/address/"+a)).json(),null,2); }
+  catch(e){ o.textContent="Error: "+e; }
+}
+</script>
+</body>
+</html>
+<li><a href="/explorer/miner.html">Web Miner</a></li>

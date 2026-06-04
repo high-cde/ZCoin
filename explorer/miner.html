@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HighCoin Web Miner // ZDOS</title>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+button,input { background:#001100; border:1px solid #0f0; color:#0f0; padding:5px; }
+pre { background:#001100; padding:10px; }
+</style>
+</head>
+<body>
+<h1>HIGHCOIN WEB MINER // ZDOS</h1>
+
+<div>
+RPC URL: <input id="rpc" value="http://127.0.0.1:8765" size="40">
+</div>
+
+<div style="margin-top:20px;">
+<button onclick="startMining()">Start Mining</button>
+<button onclick="stopMining()">Stop</button>
+</div>
+
+<pre id="out"></pre>
+
+<script>
+let mining=false;
+let timer=null;
+
+function log(x){
+  document.getElementById("out").textContent += x + "\\n";
+}
+
+async function mineOnce(){
+  const raw = "0x" + Math.floor(Math.random()*1e16).toString(16);
+  try{
+    const res = await fetch(document.getElementById("rpc").value,{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({
+        jsonrpc:"2.0",
+        method:"eth_sendRawTransaction",
+        params:[raw],
+        id:1
+      })
+    });
+    const j = await res.json();
+    log("TX: "+j.result);
+  }catch(e){
+    log("ERR: "+e);
+  }
+}
+
+function startMining(){
+  if(mining) return;
+  mining=true;
+  log("MINING STARTED...");
+  timer=setInterval(mineOnce, 1500);
+}
+
+function stopMining(){
+  mining=false;
+  clearInterval(timer);
+  log("MINING STOPPED.");
+}
+</script>
+</body>
+</html>
