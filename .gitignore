@@ -1,0 +1,11 @@
+# Evita di committare token e ambienti virtuali
+zdos-entity-discord/.env
+zdos-entity-discord/venv/
+zdos-entity-discord/__pycache__/
+
+# Log
+*.log
+
+# File temporanei
+__pycache__/
+*.pyc
