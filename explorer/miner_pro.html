@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HighCoin Quantum Miner // Z-ENGINE</title>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+button,input { background:#001100; border:1px solid #0f0; color:#0f0; padding:6px; }
+pre { background:#001100; padding:10px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.box { border:1px solid #0f0; padding:10px; }
+</style>
+</head>
+<body>
+<h1>HIGHCOIN QUANTUM MINER // Z-ENGINE</h1>
+
+<div class="box">
+RPC URL: <input id="rpc" value="http://127.0.0.1:8765" size="40">
+</div>
+
+<div class="grid">
+<div class="box">
+<h3>Mining Control</h3>
+<button onclick="startMining()">Start Mining</button>
+<button onclick="stopMining()">Stop</button>
+<pre id="log"></pre>
+</div>
+
+<div class="box">
+<h3>Live Stats</h3>
+<pre id="stats"></pre>
+</div>
+</div>
+
+<script>
+let mining=false;
+let timer=null;
+let hashes=0;
+let txCount=0;
+
+function log(x){
+  document.getElementById("log").textContent += x + "\\n";
+}
+
+function updateStats(){
+  document.getElementById("stats").textContent =
+    "Hashes: " + hashes + "\\n" +
+    "TX sent: " + txCount + "\\n" +
+    "Hashrate: " + (hashes/((performance.now()-startTime)/1000)).toFixed(2) + " H/s";
+}
+
+function randomHex(len){
+  let out=""; const chars="abcdef0123456789";
+  for(let i=0;i<len;i++) out+=chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+
+async function mineOnce(){
+  // Simulated hashing workload
+  for(let i=0;i<50000;i++){
+    randomHex(16);
+    hashes++;
+  }
+
+  const raw = "0x" + randomHex(16);
+  try{
+    const res = await fetch(document.getElementById("rpc").value,{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({
+        jsonrpc:"2.0",
+        method:"eth_sendRawTransaction",
+        params:[raw],
+        id:1
+      })
+    });
+    const j = await res.json();
+    txCount++;
+    log("TX: "+j.result);
+  }catch(e){
+    log("ERR: "+e);
+  }
+
+  updateStats();
+}
+
+let startTime=0;
+
+function startMining(){
+  if(mining) return;
+  mining=true;
+  hashes=0;
+  txCount=0;
+  startTime=performance.now();
+  log("MINING STARTED (Quantum Mode)...");
+  timer=setInterval(mineOnce, 500);
+}
+
+function stopMining(){
+  mining=false;
+  clearInterval(timer);
+  log("MINING STOPPED.");
+}
+</script>
+</body>
+</html>
