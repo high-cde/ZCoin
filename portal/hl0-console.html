@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HL0 Console</title>
+  <link rel="stylesheet" href="assets/css/zdos.css" />
+  <script src="assets/js/zdos.js" defer></script>
+</head>
+<body>
+  <div class="zdos-shell">
+    <header class="zdos-header">
+      <div>
+        <div class="zdos-brand">HYPERLAYER0 // CONSOLE</div>
+        <div class="zdos-sub">Log simulati Oracle‑X / HyperLock</div>
+      </div>
+    </header>
+
+    <nav class="zdos-nav">
+      <a href="index.html">home</a>
+      <a href="dashboard.html">dashboard</a>
+      <a href="explorer.html">explorer</a>
+      <a href="hl0-console.html" class="active">hl0 console</a>
+      <a href="zlang-playground.html">z‑lang playground</a>
+    </nav>
+
+    <section class="zdos-panel">
+      <h1 class="zdos-title">Stream HL0</h1>
+      <div class="zdos-console" id="hl0-log"></div>
+      <button class="zdos-btn zdos-btn-primary" id="btn-lock">lock di test</button>
+      <button class="zdos-btn" id="btn-error">errore</button>
+    </section>
+  </div>
+
+  <script>
+    zdosLog("hl0-log", "[*] ORACLE-X ONLINE (BYPASS MODE)");
+
+    function fakeLock() {
+      const id = Math.floor(Math.random() * 1e6).toString(16);
+      const payload = {
+        id: "0x" + id.padStart(8, "0"),
+        token: "DSN",
+        amount: "1000000000000000000",
+        status: "queued"
+      };
+      zdosLog("hl0-log", "[HL0] hyperlock event: " + JSON.stringify(payload));
+      setTimeout(() => {
+        payload.status = "processed";
+        zdosLog("hl0-log", "[HL0] hyperlock processed: " + JSON.stringify(payload));
+      }, 900);
+    }
+
+    function fakeError() {
+      const payload = {
+        module: "OracleX",
+        error: "RPC_DISABLED_IN_BYPASS_MODE"
+      };
+      zdosLog("hl0-log", "[HL0] error: " + JSON.stringify(payload));
+    }
+
+    document.getElementById("btn-lock").addEventListener("click", fakeLock);
+    document.getElementById("btn-error").addEventListener("click", fakeError);
+
+    setInterval(() => {
+      const state = zdosFakeOracleState();
+      zdosLog("hl0-log", "[HL0] state: " + JSON.stringify(state));
+    }, 3000);
+  </script>
+</body>
+</html>

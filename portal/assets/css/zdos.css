@@ -1,0 +1,155 @@
+:root {
+  --bg: #02040a;
+  --fg: #e5ffe5;
+  --accent: #00ff7f;
+  --accent-soft: #00c76a;
+  --muted: #4b6b4b;
+  --danger: #ff4b81;
+  --warn: #ffb347;
+  --font-main: "JetBrains Mono", "Fira Code", monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: radial-gradient(circle at top, #07111f 0, #02040a 55%, #000 100%);
+  color: var(--fg);
+  font-family: var(--font-main);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(transparent 0, rgba(0, 255, 127, 0.06) 1px),
+    linear-gradient(90deg, transparent 0, rgba(0, 255, 127, 0.06) 1px);
+  background-size: 100% 2px, 2px 100%;
+  opacity: 0.35;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: -1;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-shadow: 0 0 8px var(--accent); }
+
+.zdos-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.zdos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.zdos-brand {
+  font-size: 1.1rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.zdos-sub {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.zdos-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.zdos-nav a {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 255, 127, 0.35);
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.zdos-nav a.active {
+  background: radial-gradient(circle at top, rgba(0, 255, 127, 0.25), rgba(0, 0, 0, 0.9));
+  box-shadow: 0 0 14px rgba(0, 255, 127, 0.7);
+}
+
+.zdos-panel {
+  background: radial-gradient(circle at top left, rgba(0, 255, 127, 0.12), rgba(0, 0, 0, 0.9));
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 127, 0.25);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.zdos-title {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  text-shadow: 0 0 14px rgba(0, 255, 127, 0.7);
+}
+
+.zdos-muted { color: var(--muted); font-size: 0.8rem; }
+
+.zdos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.zdos-card {
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 127, 0.25);
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  font-size: 0.8rem;
+}
+
+.zdos-label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.zdos-value {
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.zdos-console {
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 127, 0.25);
+  padding: 10px;
+  height: 260px;
+  overflow-y: auto;
+}
+
+.zdos-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-soft);
+  background: rgba(0, 0, 0, 0.8);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+.zdos-btn-primary {
+  background: radial-gradient(circle at top, rgba(0, 255, 127, 0.25), rgba(0, 0, 0, 0.9));
+  box-shadow: 0 0 14px rgba(0, 255, 127, 0.7);
+}

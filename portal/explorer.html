@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HyperUniverse Explorer</title>
+  <link rel="stylesheet" href="assets/css/zdos.css" />
+  <script src="assets/js/zdos.js" defer></script>
+</head>
+<body>
+  <div class="zdos-shell">
+    <header class="zdos-header">
+      <div>
+        <div class="zdos-brand">HYPERUNIVERSE // EXPLORER</div>
+        <div class="zdos-sub">Vista logica su HL0 / Oracle‑X</div>
+      </div>
+    </header>
+
+    <nav class="zdos-nav">
+      <a href="index.html">home</a>
+      <a href="dashboard.html">dashboard</a>
+      <a href="explorer.html" class="active">explorer</a>
+      <a href="hl0-console.html">hl0 console</a>
+      <a href="zlang-playground.html">z‑lang playground</a>
+    </nav>
+
+    <section class="zdos-panel">
+      <h1 class="zdos-title">oracle_state (stub)</h1>
+      <p class="zdos-muted">
+        Qui puoi vedere una simulazione della risposta <code>/rpc/view/hyper_universe/oracle_state</code>.
+      </p>
+      <div class="zdos-console" id="explorer-log"></div>
+      <button class="zdos-btn zdos-btn-primary" id="btn-refresh">snapshot</button>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById("btn-refresh").addEventListener("click", () => {
+      const state = zdosFakeOracleState();
+      zdosLog("explorer-log", "[HL0] state: " + JSON.stringify(state));
+    });
+
+    // primo snapshot
+    const state = zdosFakeOracleState();
+    zdosLog("explorer-log", "[HL0] state: " + JSON.stringify(state));
+  </script>
+</body>
+</html>
