@@ -1,16 +1,9 @@
 use std::collections::HashMap;
 use std::sync::Mutex;
 use lazy_static::lazy_static;
-use serde::{Serialize, Deserialize};
 
 lazy_static! {
     static ref VAULT: Mutex<HashMap<String, u128>> = Mutex::new(HashMap::new());
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct VaultEntry {
-    pub owner: String,
-    pub amount: u128,
 }
 
 pub fn deposit(owner: &str, amount: u128) {
