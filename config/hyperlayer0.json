@@ -1,0 +1,7 @@
+{
+  "highcoin_rpc": "http://127.0.0.1:8765",
+  "ghostzcash_api": "http://127.0.0.1:3001",
+  "polygon_rpc": "https://polygon-rpc.com",
+  "hex_contract": "0xINSERISCI_CONTRATTO_HEX",
+  "dsn_contract": "0xfc90516a1f736FaC557e09D8853dB80dA192c296"
+}
