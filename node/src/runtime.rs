@@ -1,6 +1,9 @@
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use std::collections::HashMap;
-use std::sync::{Mutex, atomic::{AtomicU64, Ordering}};
+use std::sync::{
+    atomic::{AtomicU64, Ordering},
+    Mutex,
+};
 
 lazy_static::lazy_static! {
     static ref BALANCES: Mutex<HashMap<String, u128>> = Mutex::new(HashMap::new());
@@ -14,7 +17,7 @@ static BLOCK_HEIGHT: AtomicU64 = AtomicU64::new(0);
 static DIFFICULTY: AtomicU64 = AtomicU64::new(0x00000FFFFFFFFFFF);
 
 fn simple_hash(input: &str) -> u64 {
-    use std::hash::{Hasher, BuildHasher};
+    use std::hash::{BuildHasher, Hasher};
     let state = std::collections::hash_map::RandomState::new();
     let mut h = state.build_hasher();
     h.write(input.as_bytes());
@@ -36,7 +39,11 @@ pub fn mine(data: &str) -> (String, u64) {
 pub fn adjust_difficulty(block_time_ms: u128) {
     let target = 2000;
     let diff = DIFFICULTY.load(Ordering::SeqCst);
-    let new_diff = if block_time_ms < target { diff << 1 } else { diff >> 1 };
+    let new_diff = if block_time_ms < target {
+        diff << 1
+    } else {
+        diff >> 1
+    };
     DIFFICULTY.store(new_diff, Ordering::SeqCst);
 }
 
@@ -76,7 +83,12 @@ pub fn store_block(height: u64, block: Value) {
 }
 
 pub fn get_block(height: u64) -> Value {
-    BLOCKS.lock().unwrap().get(&height).cloned().unwrap_or(json!({}))
+    BLOCKS
+        .lock()
+        .unwrap()
+        .get(&height)
+        .cloned()
+        .unwrap_or(json!({}))
 }
 
 pub fn save_block_to_disk(height: u64, block: &Value) {

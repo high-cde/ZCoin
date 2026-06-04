@@ -1,8 +1,8 @@
 use tokio::runtime::Runtime;
 
-mod server;
-mod runtime;
 mod rpc;
+mod runtime;
+mod server;
 
 fn main() {
     println!("[*] HighCoin Node starting...");

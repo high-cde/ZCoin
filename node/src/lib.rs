@@ -1,3 +1,3 @@
-pub mod runtime;
-pub mod rpc;
 pub mod bridge;
+pub mod rpc;
+pub mod runtime;

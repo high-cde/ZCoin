@@ -30,32 +30,32 @@ Benvenuto nel portale ufficiale di HighCoin.
 
 ## Riferimenti ufficiali
 
-- Repository principale:  
+- Repository principale:
   https://github.com/high-cde/HighCoin
 
-- Profilo sviluppatore:  
+- Profilo sviluppatore:
   https://github.com/high-cde
 
-- Server Discord (HighCoin / ZDOS / DSN):  
+- Server Discord (HighCoin / ZDOS / DSN):
   https://discord.gg/djuycwjRKB
 
 ---
 
 ## Moduli
 
-- [Quantum Gateway](quantum-gateway.html)  
-- [HighCoin Faucet](faucet.html)  
-- [Z-Lang Playground](zlang-playground.html)  
+- [Quantum Gateway](quantum-gateway.html)
+- [HighCoin Faucet](faucet.html)
+- [Z-Lang Playground](zlang-playground.html)
 - [Z-Lang Miner](zlang-miner.html)
 
 ---
 
 ## Stato della rete
 
-- DSN Gateway: attivo  
-- Z-Lang Compiler: attivo  
-- BlockZLang PoW Engine: attivo  
-- HighVM Runtime: attivo  
+- DSN Gateway: attivo
+- Z-Lang Compiler: attivo
+- BlockZLang PoW Engine: attivo
+- HighVM Runtime: attivo
 
 ---
 
@@ -90,20 +90,20 @@ Il DSN Gateway collega:
 
 ## Stato
 
-- Seed BlockZLang: attivo  
-- Sincronizzazione nodi: attiva  
-- Token Factory: in preparazione  
+- Seed BlockZLang: attivo
+- Sincronizzazione nodi: attiva
+- Token Factory: in preparazione
 
 ---
 
 ## Flusso
 
-1. Richiesta in ingresso  
-2. Validazione  
-3. Compilazione Z-Lang  
-4. Esecuzione in HighVM  
-5. Firma  
-6. Propagazione nella rete  
+1. Richiesta in ingresso
+2. Validazione
+3. Compilazione Z-Lang
+4. Esecuzione in HighVM
+5. Firma
+6. Propagazione nella rete
 
 </div>
 EOF

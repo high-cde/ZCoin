@@ -1,6 +1,6 @@
+use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::sync::Mutex;
-use lazy_static::lazy_static;
 
 lazy_static! {
     static ref VAULT: Mutex<HashMap<String, u128>> = Mutex::new(HashMap::new());
