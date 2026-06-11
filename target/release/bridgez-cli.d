@@ -1,1 +1,1 @@
-/root/HighCoin/target/release/bridgez-cli: /root/HighCoin/tools/bridgez-cli/src/main.rs
+/root/zdos/target/release/bridgez-cli: /root/zdos/tools/bridgez-cli/src/main.rs

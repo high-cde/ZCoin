@@ -1,1 +1,0 @@
-// HighCoin Address Engine

@@ -30,7 +30,7 @@ a { color:#5cf2ff; }
 # <span class="glitch" data-text="HIGHCOIN x ZDOS">HIGHCOIN x ZDOS</span>
 ### Quantum Ecosystem — by ZDOS
 
-HighCoin è il motore decentralizzato dell’ecosistema **ZDOS**.
+zdos è il motore decentralizzato dell’ecosistema **ZDOS**.
 
 [<span class="btn-cyber pulse">ENTER ZDOS</span>](https://x-zdos.it)
 
@@ -68,7 +68,7 @@ setInterval(() => {
 La <b>Danza Quantistica</b> sincronizza:
 <ul>
 <li>clock interno ZDOS</li>
-<li>nodo HighCoin</li>
+<li>nodo zdos</li>
 <li>VM Z‑Lang</li>
 <li>modulo P2P</li>
 <li>wallet ZDOS</li>
@@ -93,21 +93,21 @@ Sequenza ufficiale:<br>
 
 ---
 
-## 🚀 Avvio Rapido HighCoin (Quickstart)
+## 🚀 Avvio Rapido zdos (Quickstart)
 
 \`\`\`bash
-git clone https://github.com/high-cde/HighCoin
-cd HighCoin
+git clone https://github.com/high-cde/zdos
+cd zdos
 cargo build --release
 ./target/release/node --network mainnet
-highcoin-node-cli info
+zdos-node-cli info
 \`\`\`
 
 ---
 
 ## 🧬 Visione
 
-HighCoin non è solo una chain:  
+zdos non è solo una chain:  
 è il <b>motore meccanico‑quantistico</b> dell’ecosistema ZDOS, orchestrato da DSN e controllato da te.
 
 <!-- force Sun May 31 13:35:54 CEST 2026 -->

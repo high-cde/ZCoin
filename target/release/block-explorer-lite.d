@@ -1,1 +1,1 @@
-/root/HighCoin/target/release/block-explorer-lite: /root/HighCoin/tools/block-explorer-lite/src/main.rs
+/root/zdos/target/release/block-explorer-lite: /root/zdos/tools/block-explorer-lite/src/main.rs

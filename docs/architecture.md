@@ -1,4 +1,4 @@
-# Architettura HighCoin
+# Architettura zdos
 
 Componenti:
 

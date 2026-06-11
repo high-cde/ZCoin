@@ -1,8 +1,8 @@
-# Highcoin
+# zdos
 
-Benvenuto nella wiki di **HighCoin**.
+Benvenuto nella wiki di **zdos**.
 
-Repository sperimentale per HighCoin, componenti blockchain e automazione di build tramite Makefile.
+Repository sperimentale per zdos, componenti blockchain e automazione di build tramite Makefile.
 
 ## Indice
 

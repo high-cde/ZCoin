@@ -1,7 +1,7 @@
 {
-  "name": "highcoin",
+  "name": "zdos",
   "version": "1.0.0",
-  "description": "Installer ufficiale per un nodo HighCoin completo (RPC + META via NGINX).",
+  "description": "Installer ufficiale per un nodo zdos completo (RPC + META via NGINX).",
   "type": "module",
   "directories": {
     "doc": "docs"
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/high-cde/Highcoin.git"
+    "url": "git+https://github.com/high-cde/zdos.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/high-cde/Highcoin/issues"
+    "url": "https://github.com/high-cde/zdos/issues"
   },
-  "homepage": "https://github.com/high-cde/Highcoin#readme",
+  "homepage": "https://github.com/high-cde/zdos#readme",
   "dependencies": {
     "@scure/bip32": "^2.2.0",
     "@scure/bip39": "^2.2.0",

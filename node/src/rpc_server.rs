@@ -92,10 +92,31 @@ async fn handle_rpc(req: serde_json::Value) -> serde_json::Value {
         "getinfo" => json!({
             "jsonrpc": "2.0",
             "result": {
-                "name": "HighCoin",
+                "name": "zdos",
                 "version": "0.1",
-                "protocol": 1
+                "protocol": 1,
+                "chain_id": 1337
             },
+            "id": id
+        }),
+        "eth_blockNumber" => json!({
+            "jsonrpc": "2.0",
+            "result": "0x1",
+            "id": id
+        }),
+        "eth_getBalance" => json!({
+            "jsonrpc": "2.0",
+            "result": "0xde0b6b3a7640000",
+            "id": id
+        }),
+        "eth_sendRawTransaction" => json!({
+            "jsonrpc": "2.0",
+            "result": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "id": id
+        }),
+        "eth_chainId" => json!({
+            "jsonrpc": "2.0",
+            "result": "0x539",
             "id": id
         }),
 

@@ -1,5 +1,5 @@
 {
-  "description": "HighCoin P2P protocol high-level spec",
+  "description": "zdos P2P protocol high-level spec",
   "handshake": {
     "fields": [
       "protocol_version",

@@ -1,6 +1,6 @@
 # Contributing
 
-Grazie per l'interesse verso `high-cde/HighCoin`. Il repository fa parte dell'ecosistema ZDOS / Z-GENESIS e privilegia contributi chiari, verificabili e coerenti con la documentazione.
+Grazie per l'interesse verso `high-cde/zdos`. Il repository fa parte dell'ecosistema ZDOS / Z-GENESIS e privilegia contributi chiari, verificabili e coerenti con la documentazione.
 
 ## Flusso consigliato
 

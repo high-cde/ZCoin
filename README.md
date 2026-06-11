@@ -1,6 +1,6 @@
-# Highcoin
+# zdos
 
-**HighCoin** è repository sperimentale per HighCoin, componenti blockchain e automazione di build tramite Makefile.
+**zdos** è repository sperimentale per zdos, componenti blockchain e automazione di build tramite Makefile.
 
 ## Panoramica
 
@@ -8,10 +8,10 @@ Questo repository fa parte della costellazione **ZDOS / Z-GENESIS**, una linea d
 
 | Area | Dettaglio |
 |---|---|
-| Repository | high-cde/HighCoin |
+| Repository | high-cde/zdos |
 | Visibilità | Pubblico |
 | Tecnologia principale | Makefile/build automation |
-| Ruolo | Repository sperimentale per HighCoin, componenti blockchain e automazione di build tramite Makefile. |
+| Ruolo | Repository sperimentale per zdos, componenti blockchain e automazione di build tramite Makefile. |
 
 ## Obiettivi
 

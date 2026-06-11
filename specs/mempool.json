@@ -1,5 +1,5 @@
 {
-  "description": "HighCoin mempool behavior specification",
+  "description": "zdos mempool behavior specification",
   "rules": {
     "max_txs": "maximum number of pending transactions",
     "max_size_bytes": "maximum total mempool size",

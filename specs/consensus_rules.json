@@ -1,5 +1,5 @@
 {
-  "description": "HighCoin consensus high-level rules (no implementation)",
+  "description": "zdos consensus high-level rules (no implementation)",
   "block_validation": [
     "parent exists and is valid",
     "timestamp is not too far in the future",

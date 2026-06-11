@@ -1,1 +1,1 @@
-/root/HighCoin/target/release/libnode.rlib: /root/HighCoin/node/src/lib.rs /root/HighCoin/node/src/rpc.rs /root/HighCoin/node/src/rpc_server.rs /root/HighCoin/node/src/state.rs /root/HighCoin/node/src/vm.rs /root/HighCoin/node/src/zlang_parser.rs /root/HighCoin/node/src/zlang_tokenizer.rs
+/root/zdos/target/release/libnode.rlib: /root/zdos/node/src/lib.rs /root/zdos/node/src/rpc.rs /root/zdos/node/src/rpc_server.rs /root/zdos/node/src/state.rs /root/zdos/node/src/vm.rs /root/zdos/node/src/zlang_parser.rs /root/zdos/node/src/zlang_tokenizer.rs

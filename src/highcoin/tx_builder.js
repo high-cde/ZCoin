@@ -1,1 +1,0 @@
-// HighCoin Transaction Builder

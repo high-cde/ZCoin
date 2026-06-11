@@ -12,7 +12,7 @@ async fn main() {
         start_rpc(&STATE, "0.0.0.0:8765").await;
     });
 
-    println!("🚀 HighCoin Node avviato");
+    println!("🚀 zdos Node avviato");
     println!("📡 RPC su http://127.0.0.1:8765");
 
     loop {

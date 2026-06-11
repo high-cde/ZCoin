@@ -1,9 +1,9 @@
-# Installazione nodo HighCoin
+# Installazione nodo zdos
 
 Installazione automatica:
 
 ```
-curl -sL http://<ip>/install-highcoin-node.sh | bash
+curl -sL http://<ip>/install-zdos-node.sh | bash
 ```
 
 Config mainnet:

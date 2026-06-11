@@ -2,7 +2,7 @@
 
 ## Ambito
 
-Questa policy riguarda il repository `high-cde/HighCoin` e la relativa documentazione. Il progetto può includere script, automazioni, componenti sperimentali o integrazioni con sistemi esterni; per questo motivo ogni utilizzo deve avvenire in ambienti autorizzati e controllati.
+Questa policy riguarda il repository `high-cde/zdos` e la relativa documentazione. Il progetto può includere script, automazioni, componenti sperimentali o integrazioni con sistemi esterni; per questo motivo ogni utilizzo deve avvenire in ambienti autorizzati e controllati.
 
 ## Segnalazione responsabile
 

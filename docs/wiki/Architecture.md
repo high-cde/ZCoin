@@ -2,13 +2,13 @@
 
 ## Ruolo del repository
 
-Repository sperimentale per HighCoin, componenti blockchain e automazione di build tramite Makefile.
+Repository sperimentale per zdos, componenti blockchain e automazione di build tramite Makefile.
 
 Il repository deve essere mantenuto come modulo comprensibile e tracciabile dell'ecosistema ZDOS / Z-GENESIS. Ogni componente dovrebbe avere responsabilità esplicite, confini chiari e dipendenze documentate.
 
 | Area | Descrizione |
 |---|---|
-| Identità | `high-cde/HighCoin` |
+| Identità | `high-cde/zdos` |
 | Tecnologia principale | Makefile/build automation |
 | Tipo | Repository principale |
 | Visibilità | PUBLIC |

@@ -1,4 +1,4 @@
-# Genesis — HighCoin Mainnet
+# Genesis — zdos Mainnet
 
 Il genesis definisce:
 

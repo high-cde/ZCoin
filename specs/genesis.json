@@ -1,7 +1,7 @@
 {
-  "chain_id": "highcoin-mainnet",
+  "chain_id": "zdos-mainnet",
   "version": 1,
-  "description": "HighCoin mainnet genesis specification",
+  "description": "zdos mainnet genesis specification",
   "fields": {
     "chain_id": "string - unique network identifier",
     "version": "integer - genesis format version",

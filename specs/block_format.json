@@ -1,5 +1,5 @@
 {
-  "description": "HighCoin block format specification",
+  "description": "zdos block format specification",
   "header": {
     "parent_hash": "hash of previous block",
     "number": "block height",
