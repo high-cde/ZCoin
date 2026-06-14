@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>ZDOS Miner (demo)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html">Hub</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="explorer.html">Explorer</a>
+  <a href="miner.html">Miner</a>
+  <a href="zlang.html">Z‑Lang</a>
+</nav>
+
+<section class="section">
+  <h2>Web Miner (demo)</h2>
+  <div class="card">
+    <p>Loop di mining simulato in JavaScript. Nessuna chain reale, solo showcase.</p>
+    <button class="btn" id="startMiner">Start</button>
+    <button class="btn" id="stopMiner" style="margin-left:10px;background:transparent;border:1px solid #00eaff;color:#00eaff;box-shadow:none;">Stop</button>
+    <p style="margin-top:16px;font-family:'Roboto Mono',monospace;font-size:.9rem;">
+      Hashes: <span id="hashCount">0</span><br>
+      Stato: <span id="minerStatus">idle</span>
+    </p>
+  </div>
+</section>
+
+<footer>
+  ZDOS • Miner demo — high‑cde
+</footer>
+
+<script>
+let minerInterval=null;
+let hashes=0;
+const hashSpan=document.getElementById('hashCount');
+const statusSpan=document.getElementById('minerStatus');
+document.getElementById('startMiner').onclick=()=>{
+  if(minerInterval) return;
+  statusSpan.textContent='running';
+  minerInterval=setInterval(()=>{
+    hashes+=Math.floor(Math.random()*50)+10;
+    hashSpan.textContent=hashes;
+  },200);
+};
+document.getElementById('stopMiner').onclick=()=>{
+  if(minerInterval){
+    clearInterval(minerInterval);
+    minerInterval=null;
+    statusSpan.textContent='stopped';
+  }
+};
+</script>
+</body>
+</html>
