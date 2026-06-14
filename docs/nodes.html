@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>ZDOS Interceptor • Node Map</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .node-card {
+      background:#0a0a12;
+      border:1px solid #202234;
+      border-radius:12px;
+      padding:20px;
+      margin-bottom:20px;
+      box-shadow:0 0 20px #00eaff33;
+    }
+    .node-status {
+      font-family:'Roboto Mono',monospace;
+      font-size:.85rem;
+    }
+    .node-dot {
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      display:inline-block;
+      margin-right:8px;
+      box-shadow:0 0 10px #00ffc3;
+    }
+    .active { background:#00ffc3; }
+    .offline { background:#ff4b81; box-shadow:0 0 10px #ff4b81; }
+  </style>
+</head>
+
+<body>
+<nav class="navbar">
+  <a href="index.html">Hub</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="explorer.html">Explorer</a>
+  <a href="miner.html">Miner</a>
+  <a href="zlang.html">Z‑Lang</a>
+  <a href="roadmap.html">Roadmap</a>
+  <a href="nodes.html">Nodes</a>
+</nav>
+
+<section class="section">
+  <h2>ZDOS Interceptor • Node Map</h2>
+  <div class="card">
+    <p>Mappa dinamica dei nodi ZDOS / HighCoin. I nodi si attivano in tempo reale, stile Interceptor.</p>
+  </div>
+</section>
+
+<section class="section" id="nodesContainer"></section>
+
+<footer>
+  ZDOS • Interceptor Node Map — high‑cde
+</footer>
+
+<script>
+(function(){
+  const container = document.getElementById('nodesContainer');
+
+  // MOCK NODES — quando avremo la rete reale, questi verranno sostituiti da fetch()
+  let nodes = [
+    { name:"Node‑Alpha",   ip:"192.168.1.10", active:false, ping:0 },
+    { name:"Node‑Bravo",   ip:"192.168.1.22", active:false, ping:0 },
+    { name:"Node‑Charlie", ip:"10.0.0.5",     active:false, ping:0 },
+    { name:"Node‑Delta",   ip:"172.16.0.9",   active:false, ping:0 },
+    { name:"Node‑Echo",    ip:"192.168.1.44", active:false, ping:0 }
+  ];
+
+  function render() {
+    container.innerHTML = "";
+    nodes.forEach(n => {
+      const card = document.createElement("div");
+      card.className = "node-card";
+
+      card.innerHTML = `
+        <h3>${n.name}</h3>
+        <p class="node-status">
+          <span class="node-dot ${n.active ? "active" : "offline"}"></span>
+          ${n.active ? "ACTIVE" : "OFFLINE"}
+        </p>
+        <p class="node-status">IP: ${n.ip}</p>
+        <p class="node-status">Ping: ${n.ping} ms</p>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  // Simulazione attivazione nodi stile Interceptor
+  function randomize() {
+    nodes.forEach(n => {
+      // 70% chance di essere attivo
+      n.active = Math.random() > 0.3;
+      // ping realistico
+      n.ping = n.active ? Math.floor(Math.random()*80)+20 : 0;
+    });
+    render();
+  }
+
+  // Aggiorna ogni 2 secondi
+  render();
+  setInterval(randomize, 2000);
+})();
+</script>
+
+</body>
+</html>
