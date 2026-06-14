@@ -38,7 +38,7 @@
       <label for="pathInput" style="font-size:.9rem;opacity:.9;">Derivation path</label><br>
       <input id="pathInput" type="text" style="margin-top:4px;" value="m/44'/60'/0'/0/0">
       <p style="font-size:.8rem;opacity:.7;margin-top:4px;">
-        Default EVM‑like: <code>m/44'/60'/0'/0/index</code> — HighCoin può usare lo stesso schema.
+        Default EVM‑like: <code>m/44'/60'/0'/0/index</code> — compatibile con HighCoin.
       </p>
     </div>
 
@@ -56,6 +56,7 @@
         Path: <span id="derivedPath"></span><br>
         Index: <span id="derivedIndex"></span>
       </p>
+
       <p style="font-size:.9rem;opacity:.9;margin-top:10px;margin-bottom:4px;">Address:</p>
       <div id="addrText" style="font-family:'Roboto Mono',monospace;font-size:.9rem;border:1px solid #202234;border-radius:8px;padding:10px;word-wrap:break-word;"></div>
 
@@ -99,16 +100,9 @@
   const accountIndex= document.getElementById('accountIndex');
 
   function buildPath(basePath, index) {
-    // se il path termina con /0, sostituiamo l'ultimo segmento con l'indice
-    // es: m/44'/60'/0'/0/0 -> m/44'/60'/0'/0/index
-    try {
-      const parts = basePath.split('/');
-      if (parts.length > 0) {
-        parts[parts.length - 1] = String(index);
-        return parts.join('/');
-      }
-    } catch(e) {}
-    return basePath;
+    const parts = basePath.split('/');
+    parts[parts.length - 1] = String(index);
+    return parts.join('/');
   }
 
   function generateSeedAndKeys() {
@@ -126,7 +120,6 @@
       wallet = new ethers.Wallet(hdnode.privateKey);
     } catch (e) {
       alert("Errore nella derivazione HD. Controlla il path.");
-      console.error(e);
       return;
     }
 
@@ -140,20 +133,17 @@
     keysBox.style.display    = 'block';
   }
 
-  function copyToClipboard(text, btn, label) {
-    if (!text) return;
+  function copy(text, btn, label) {
     navigator.clipboard.writeText(text).then(()=>{
       const old = btn.textContent;
       btn.textContent = label;
       setTimeout(()=>{ btn.textContent = old; }, 1500);
-    }).catch(()=>{
-      alert('Impossibile copiare automaticamente. Copia manualmente.');
     });
   }
 
   genBtn.addEventListener('click', generateSeedAndKeys);
-  copySeedBtn.addEventListener('click', ()=>copyToClipboard(seedText.textContent.trim(), copySeedBtn, 'Copiato'));
-  copyPrivBtn.addEventListener('click', ()=>copyToClipboard(privText.textContent.trim(), copyPrivBtn, 'Copiata'));
+  copySeedBtn.addEventListener('click', ()=>copy(seedText.textContent.trim(), copySeedBtn, 'Copiato'));
+  copyPrivBtn.addEventListener('click', ()=>copy(privText.textContent.trim(), copyPrivBtn, 'Copiata'));
 })();
 </script>
 </body>
