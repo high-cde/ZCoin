@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>ZDOS Wallet • BIP39 / HD / Passphrase</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 <nav class="navbar">
   <a href="index.html">Hub</a>
@@ -14,154 +15,106 @@
   <a href="explorer.html">Explorer</a>
   <a href="miner.html">Miner</a>
   <a href="zlang.html">Z‑Lang</a>
+  <a href="roadmap.html">Roadmap</a>
+  <a href="nodes.html">Nodes</a>
 </nav>
 
 <section class="section">
   <h2>Wallet ZDOS • Seed BIP39 + HD + Passphrase</h2>
   <div class="card">
-    <p><strong>ATTENZIONE:</strong> questo wallet genera seed, chiavi private e address reali nel browser. Non fare screenshot, non condividere, non incollare in chat/app di terzi.</p>
 
-    <div style="margin-top:16px;">
-      <label for="wordCount" style="font-size:.9rem;opacity:.9;">Numero parole</label><br>
-      <select id="wordCount" style="max-width:140px;margin-top:4px;">
-        <option value="12">12 parole</option>
-        <option value="24">24 parole</option>
-      </select>
+    <label>Numero parole</label>
+    <select id="wordCount">
+      <option value="12">12 parole</option>
+      <option value="24">24 parole</option>
+    </select>
+
+    <label style="margin-top:12px;">Passphrase BIP39 (opzionale)</label>
+    <input id="passphrase" type="password" placeholder="Lascia vuoto se non usi passphrase">
+
+    <label style="margin-top:12px;">Indice account (altezza)</label>
+    <input id="accountIndex" type="number" value="0" min="0">
+
+    <label style="margin-top:12px;">Derivation Path</label>
+    <input id="pathInput" type="text" value="m/44'/60'/0'/0/0">
+
+    <button class="btn" id="genSeedBtn" style="margin-top:20px;">Genera nuovo seed + chiavi</button>
+
+    <div id="seedBox" style="display:none;margin-top:20px;">
+      <p><strong>Seed BIP39:</strong></p>
+      <div id="seedText" class="mono-box"></div>
+      <button class="btn" id="copySeedBtn">Copia seed</button>
     </div>
 
-    <div style="margin-top:16px;">
-      <label for="passphrase" style="font-size:.9rem;opacity:.9;">Passphrase BIP39 (opzionale)</label><br>
-      <input id="passphrase" type="password" placeholder="Lascia vuoto se non usi passphrase" style="margin-top:4px;">
-      <p style="font-size:.8rem;opacity:.7;margin-top:4px;">
-        mnemonic + passphrase = seed diverso. Se la dimentichi, i fondi sono persi.
-      </p>
+    <div id="keysBox" style="display:none;margin-top:20px;">
+      <p><strong>Address:</strong></p>
+      <div id="addrText" class="mono-box"></div>
+
+      <p style="margin-top:12px;"><strong>Private Key:</strong></p>
+      <div id="privText" class="mono-box"></div>
+      <button class="btn" id="copyPrivBtn">Copia private key</button>
     </div>
 
-    <div style="margin-top:16px;">
-      <label for="accountIndex" style="font-size:.9rem;opacity:.9;">Indice account (altezza)</label><br>
-      <input id="accountIndex" type="number" value="0" min="0" style="max-width:120px;margin-top:4px;">
-    </div>
-
-    <div style="margin-top:16px;">
-      <label for="pathInput" style="font-size:.9rem;opacity:.9;">Derivation path</label><br>
-      <input id="pathInput" type="text" style="margin-top:4px;" value="m/44'/60'/0'/0/0">
-      <p style="font-size:.8rem;opacity:.7;margin-top:4px;">
-        Default EVM‑like: <code>m/44'/60'/0'/0/index</code> — compatibile con HighCoin.
-      </p>
-    </div>
-
-    <button class="btn" id="genSeedBtn" style="margin-top:16px;">Genera nuovo seed + chiavi</button>
-
-    <div id="seedBox" style="margin-top:20px;display:none;">
-      <p style="font-size:.9rem;opacity:.9;margin-bottom:6px;">Seed BIP39 (mnemonic):</p>
-      <div id="seedText" style="font-family:'Roboto Mono',monospace;font-size:.9rem;border:1px solid #202234;border-radius:8px;padding:12px;word-wrap:break-word;"></div>
-      <button class="btn" id="copySeedBtn" style="margin-top:12px;">Copia seed</button>
-    </div>
-
-    <div id="keysBox" style="margin-top:24px;display:none;">
-      <p style="font-size:.9rem;opacity:.9;margin-bottom:6px;">Derivazione HD:</p>
-      <p style="font-family:'Roboto Mono',monospace;font-size:.85rem;">
-        Path: <span id="derivedPath"></span><br>
-        Index: <span id="derivedIndex"></span><br>
-        Passphrase usata: <span id="usedPassphrase"></span>
-      </p>
-
-      <p style="font-size:.9rem;opacity:.9;margin-top:10px;margin-bottom:4px;">Address:</p>
-      <div id="addrText" style="font-family:'Roboto Mono',monospace;font-size:.9rem;border:1px solid #202234;border-radius:8px;padding:10px;word-wrap:break-word;"></div>
-
-      <p style="font-size:.9rem;opacity:.9;margin-top:10px;margin-bottom:4px;">Private key:</p>
-      <div id="privText" style="font-family:'Roboto Mono',monospace;font-size:.9rem;border:1px solid #202234;border-radius:8px;padding:10px;word-wrap:break-word;"></div>
-
-      <button class="btn" id="copyPrivBtn" style="margin-top:12px;background:transparent;border:1px solid #ff4b81;color:#ff4b81;box-shadow:none;">Copia private key</button>
-    </div>
-
-    <div style="margin-top:24px;font-size:.85rem;opacity:.8;">
-      <p>Linee guida operative:</p>
-      <ul>
-        <li>Scrivi seed, passphrase e private key su carta, non in foto.</li>
-        <li>Passphrase BIP39 ≠ password di login: è parte del seed.</li>
-        <li>Seed senza passphrase e seed con passphrase generano chiavi diverse.</li>
-      </ul>
-    </div>
   </div>
 </section>
 
 <footer>
-  ZDOS • Wallet BIP39 / HD / Passphrase — high‑cde
+  ZDOS • Wallet BIP39 / HD — high‑cde
 </footer>
 
 <script src="https://unpkg.com/bip39@3.1.0/dist/index.browser.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
 <script>
 (function(){
-  const genBtn       = document.getElementById('genSeedBtn');
-  const copySeedBtn  = document.getElementById('copySeedBtn');
-  const copyPrivBtn  = document.getElementById('copyPrivBtn');
-  const seedBox      = document.getElementById('seedBox');
-  const keysBox      = document.getElementById('keysBox');
-  const seedText     = document.getElementById('seedText');
-  const addrText     = document.getElementById('addrText');
-  const privText     = document.getElementById('privText');
-  const derivedPath  = document.getElementById('derivedPath');
-  const derivedIndex = document.getElementById('derivedIndex');
-  const usedPass     = document.getElementById('usedPassphrase');
-  const wordCountSel = document.getElementById('wordCount');
-  const pathInput    = document.getElementById('pathInput');
-  const accountIndex = document.getElementById('accountIndex');
-  const passphraseEl = document.getElementById('passphrase');
+  const genBtn = document.getElementById("genSeedBtn");
+  const seedBox = document.getElementById("seedBox");
+  const keysBox = document.getElementById("keysBox");
 
-  function buildPath(basePath, index) {
-    const parts = basePath.split('/');
-    parts[parts.length - 1] = String(index);
-    return parts.join('/');
+  const seedText = document.getElementById("seedText");
+  const addrText = document.getElementById("addrText");
+  const privText = document.getElementById("privText");
+
+  const copySeedBtn = document.getElementById("copySeedBtn");
+  const copyPrivBtn = document.getElementById("copyPrivBtn");
+
+  function buildPath(base, index) {
+    const parts = base.split("/");
+    parts[parts.length - 1] = index;
+    return parts.join("/");
   }
 
-  function generateSeedAndKeys() {
-    const wc = parseInt(wordCountSel.value, 10);
-    const strength = (wc === 12) ? 128 : 256;
+  async function generate() {
+    const wc = parseInt(document.getElementById("wordCount").value);
+    const strength = wc === 12 ? 128 : 256;
+
     const mnemonic = bip39.generateMnemonic(strength);
+    const passphrase = document.getElementById("passphrase").value || "";
+    const index = parseInt(document.getElementById("accountIndex").value);
+    const basePath = document.getElementById("pathInput").value;
 
-    const idx = parseInt(accountIndex.value || '0', 10);
-    const basePath = pathInput.value.trim() || "m/44'/60'/0'/0/0";
-    const finalPath = buildPath(basePath, idx);
-    const passphrase = passphraseEl.value || "";
+    const finalPath = buildPath(basePath, index);
 
-    let wallet;
-    try {
-      const hdnode = ethers.utils.HDNode.fromMnemonic(mnemonic, passphrase).derivePath(finalPath);
-      wallet = new ethers.Wallet(hdnode.privateKey);
-    } catch (e) {
-      alert("Errore nella derivazione HD. Controlla path e passphrase.");
-      console.error(e);
-      return;
-    }
+    const hd = ethers.utils.HDNode.fromMnemonic(mnemonic, passphrase).derivePath(finalPath);
+    const wallet = new ethers.Wallet(hd.privateKey);
 
     seedText.textContent = mnemonic;
-    seedBox.style.display = 'block';
+    addrText.textContent = wallet.address;
+    privText.textContent = wallet.privateKey;
 
-    derivedPath.textContent  = finalPath;
-    derivedIndex.textContent = idx;
-    usedPass.textContent     = passphrase ? '(impostata)' : '(vuota)';
-    addrText.textContent     = wallet.address;
-    privText.textContent     = wallet.privateKey;
-    keysBox.style.display    = 'block';
+    seedBox.style.display = "block";
+    keysBox.style.display = "block";
   }
 
-  function copy(text, btn, label) {
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(()=>{
-      const old = btn.textContent;
-      btn.textContent = label;
-      setTimeout(()=>{ btn.textContent = old; }, 1500);
-    }).catch(()=>{
-      alert('Impossibile copiare automaticamente. Copia manualmente.');
-    });
+  function copy(text) {
+    navigator.clipboard.writeText(text);
   }
 
-  genBtn.addEventListener('click', generateSeedAndKeys);
-  copySeedBtn.addEventListener('click', ()=>copy(seedText.textContent.trim(), copySeedBtn, 'Copiato'));
-  copyPrivBtn.addEventListener('click', ()=>copy(privText.textContent.trim(), copyPrivBtn, 'Copiata'));
+  genBtn.onclick = generate;
+  copySeedBtn.onclick = () => copy(seedText.textContent);
+  copyPrivBtn.onclick = () => copy(privText.textContent);
 })();
 </script>
+
 </body>
 </html>
