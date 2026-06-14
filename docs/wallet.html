@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>ZDOS Wallet • BIP39</title>
+  <title>ZDOS Wallet • BIP39 / HD</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -17,9 +17,9 @@
 </nav>
 
 <section class="section">
-  <h2>Wallet ZDOS • Seed BIP39</h2>
+  <h2>Wallet ZDOS • Seed BIP39 + HD</h2>
   <div class="card">
-    <p><strong>ATTENZIONE:</strong> questa pagina genera un seed BIP39 reale nel browser. Non fare screenshot, non condividere, non salvare in chiaro.</p>
+    <p><strong>ATTENZIONE:</strong> questo wallet genera seed, chiavi private e address reali nel browser. Non fare screenshot, non condividere, non incollare in chat/app di terzi.</p>
 
     <div style="margin-top:16px;">
       <label for="wordCount" style="font-size:.9rem;opacity:.9;">Numero parole</label><br>
@@ -29,7 +29,20 @@
       </select>
     </div>
 
-    <button class="btn" id="genSeedBtn" style="margin-top:16px;">Genera nuovo seed</button>
+    <div style="margin-top:16px;">
+      <label for="accountIndex" style="font-size:.9rem;opacity:.9;">Indice account (altezza)</label><br>
+      <input id="accountIndex" type="number" value="0" min="0" style="max-width:120px;margin-top:4px;">
+    </div>
+
+    <div style="margin-top:16px;">
+      <label for="pathInput" style="font-size:.9rem;opacity:.9;">Derivation path</label><br>
+      <input id="pathInput" type="text" style="margin-top:4px;" value="m/44'/60'/0'/0/0">
+      <p style="font-size:.8rem;opacity:.7;margin-top:4px;">
+        Default EVM‑like: <code>m/44'/60'/0'/0/index</code> — HighCoin può usare lo stesso schema.
+      </p>
+    </div>
+
+    <button class="btn" id="genSeedBtn" style="margin-top:16px;">Genera nuovo seed + chiavi</button>
 
     <div id="seedBox" style="margin-top:20px;display:none;">
       <p style="font-size:.9rem;opacity:.9;margin-bottom:6px;">Seed BIP39:</p>
@@ -37,51 +50,110 @@
       <button class="btn" id="copySeedBtn" style="margin-top:12px;">Copia seed</button>
     </div>
 
-    <div style="margin-top:20px;font-size:.85rem;opacity:.8;">
+    <div id="keysBox" style="margin-top:24px;display:none;">
+      <p style="font-size:.9rem;opacity:.9;margin-bottom:6px;">Derivazione HD:</p>
+      <p style="font-family:'Roboto Mono',monospace;font-size:.85rem;">
+        Path: <span id="derivedPath"></span><br>
+        Index: <span id="derivedIndex"></span>
+      </p>
+      <p style="font-size:.9rem;opacity:.9;margin-top:10px;margin-bottom:4px;">Address:</p>
+      <div id="addrText" style="font-family:'Roboto Mono',monospace;font-size:.9rem;border:1px solid #202234;border-radius:8px;padding:10px;word-wrap:break-word;"></div>
+
+      <p style="font-size:.9rem;opacity:.9;margin-top:10px;margin-bottom:4px;">Private key:</p>
+      <div id="privText" style="font-family:'Roboto Mono',monospace;font-size:.9rem;border:1px solid #202234;border-radius:8px;padding:10px;word-wrap:break-word;"></div>
+
+      <button class="btn" id="copyPrivBtn" style="margin-top:12px;background:transparent;border:1px solid #ff4b81;color:#ff4b81;box-shadow:none;">Copia private key</button>
+    </div>
+
+    <div style="margin-top:24px;font-size:.85rem;opacity:.8;">
       <p>Linee guida operative:</p>
       <ul>
-        <li>Scrivi il seed su carta, non in foto.</li>
-        <li>Non inserire mai il seed in siti o app non verificate.</li>
-        <li>Chi possiede il seed controlla i fondi.</li>
+        <li>Scrivi seed e private key su carta, non in foto.</li>
+        <li>Non inserire mai seed/private key in siti o app non verificate.</li>
+        <li>Per HighCoin, questo schema HD è compatibile con EVM‑like (path 60').</li>
       </ul>
     </div>
   </div>
 </section>
 
 <footer>
-  ZDOS • Wallet BIP39 — high‑cde
+  ZDOS • Wallet BIP39 / HD — high‑cde
 </footer>
 
 <script src="https://unpkg.com/bip39@3.1.0/dist/index.browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script>
 (function(){
-  const genBtn = document.getElementById('genSeedBtn');
-  const copyBtn = document.getElementById('copySeedBtn');
-  const seedBox = document.getElementById('seedBox');
-  const seedText = document.getElementById('seedText');
-  const wordCountSel = document.getElementById('wordCount');
+  const genBtn      = document.getElementById('genSeedBtn');
+  const copySeedBtn = document.getElementById('copySeedBtn');
+  const copyPrivBtn = document.getElementById('copyPrivBtn');
+  const seedBox     = document.getElementById('seedBox');
+  const keysBox     = document.getElementById('keysBox');
+  const seedText    = document.getElementById('seedText');
+  const addrText    = document.getElementById('addrText');
+  const privText    = document.getElementById('privText');
+  const derivedPath = document.getElementById('derivedPath');
+  const derivedIndex= document.getElementById('derivedIndex');
+  const wordCountSel= document.getElementById('wordCount');
+  const pathInput   = document.getElementById('pathInput');
+  const accountIndex= document.getElementById('accountIndex');
 
-  function generateSeed() {
-    const wc = parseInt(wordCountSel.value, 10);
-    const strength = (wc === 12) ? 128 : 256; // 12 parole = 128 bit, 24 = 256
-    const mnemonic = bip39.generateMnemonic(strength);
-    seedText.textContent = mnemonic;
-    seedBox.style.display = 'block';
+  function buildPath(basePath, index) {
+    // se il path termina con /0, sostituiamo l'ultimo segmento con l'indice
+    // es: m/44'/60'/0'/0/0 -> m/44'/60'/0'/0/index
+    try {
+      const parts = basePath.split('/');
+      if (parts.length > 0) {
+        parts[parts.length - 1] = String(index);
+        return parts.join('/');
+      }
+    } catch(e) {}
+    return basePath;
   }
 
-  function copySeed() {
-    const text = seedText.textContent.trim();
+  function generateSeedAndKeys() {
+    const wc = parseInt(wordCountSel.value, 10);
+    const strength = (wc === 12) ? 128 : 256;
+    const mnemonic = bip39.generateMnemonic(strength);
+
+    const idx = parseInt(accountIndex.value || '0', 10);
+    const basePath = pathInput.value.trim() || "m/44'/60'/0'/0/0";
+    const finalPath = buildPath(basePath, idx);
+
+    let wallet;
+    try {
+      const hdnode = ethers.utils.HDNode.fromMnemonic(mnemonic).derivePath(finalPath);
+      wallet = new ethers.Wallet(hdnode.privateKey);
+    } catch (e) {
+      alert("Errore nella derivazione HD. Controlla il path.");
+      console.error(e);
+      return;
+    }
+
+    seedText.textContent = mnemonic;
+    seedBox.style.display = 'block';
+
+    derivedPath.textContent  = finalPath;
+    derivedIndex.textContent = idx;
+    addrText.textContent     = wallet.address;
+    privText.textContent     = wallet.privateKey;
+    keysBox.style.display    = 'block';
+  }
+
+  function copyToClipboard(text, btn, label) {
     if (!text) return;
     navigator.clipboard.writeText(text).then(()=>{
-      copyBtn.textContent = 'Copiato';
-      setTimeout(()=>{ copyBtn.textContent = 'Copia seed'; }, 1500);
+      const old = btn.textContent;
+      btn.textContent = label;
+      setTimeout(()=>{ btn.textContent = old; }, 1500);
     }).catch(()=>{
-      alert('Impossibile copiare automaticamente. Copia manualmente il seed.');
+      alert('Impossibile copiare automaticamente. Copia manualmente.');
     });
   }
 
-  genBtn.addEventListener('click', generateSeed);
-  copyBtn.addEventListener('click', copySeed);
+  genBtn.addEventListener('click', generateSeedAndKeys);
+  copySeedBtn.addEventListener('click', ()=>copyToClipboard(seedText.textContent.trim(), copySeedBtn, 'Copiato'));
+  copyPrivBtn.addEventListener('click', ()=>copyToClipboard(privText.textContent.trim(), copyPrivBtn, 'Copiata'));
 })();
 </script>
 </body>
