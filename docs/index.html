@@ -1,150 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>HighCoin — ZDOS / Z-GENESIS Ecosystem</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HighCoin • ZDOS / Z‑GENESIS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <header class="navbar">
-    <div class="logo">HIGHCOIN</div>
-    <nav class="nav-links">
-      <a href="#explorer">Explorer</a>
-      <a href="#wallet">Wallet</a>
-      <a href="#miner">Miner</a>
-      <a href="#zlang">ZLang</a>
-      <a href="#github">GitHub</a>
-    </nav>
-    <button class="btn btn-yellow">Launch App</button>
-  </header>
 
-  <main>
-    <section class="hero">
-      <p class="hero-kicker">ZDOS / Z-GENESIS ECOSYSTEM</p>
-      <h1 class="hero-title">The Future of HighCoin is Here</h1>
-      <p class="hero-sub">
-        A next-generation EVM-compatible blockchain powered by Rust, ZLang and the ZDOS modular infrastructure.
-        Secure, fast, decentralized.
-      </p>
-      <div class="hero-tags">
-        <span class="tag">EVM Compatible</span>
-        <span class="tag">Secure & Decentralized</span>
-        <span class="tag">ZDOS Ecosystem</span>
-        <span class="tag">ZLang Native</span>
-      </div>
-      <div class="hero-cta">
-        <button class="btn btn-yellow">Open Wallet</button>
-        <button class="btn btn-blue">Block Explorer</button>
-        <a href="#zlang" class="link-zlang">ZLang</a>
-      </div>
-      <div class="built-with">Built with Hercules</div>
-    </section>
+<nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="wallet.html">Wallet</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="miner.html">Miner</a>
+    <a href="zlang.html">ZLang</a>
+</nav>
 
-    <section class="metrics-tokenomics" id="tokenomics">
-      <div class="metrics-row">
-        <div class="metric"><div class="metric-value">21M HGC</div><div class="metric-label">Max Supply</div></div>
-        <div class="metric"><div class="metric-value">4.2K</div><div class="metric-label">Transactions/sec</div></div>
-        <div class="metric"><div class="metric-value">&lt;1s</div><div class="metric-label">Block Time</div></div>
-        <div class="metric"><div class="metric-value">EVM</div><div class="metric-label">Compatible</div></div>
-      </div>
+<section class="hero">
+    <h1>HIGHCOIN • ZDOS / Z‑GENESIS</h1>
+    <p>The next‑generation modular blockchain powered by Rust, ZLang and Hercules.</p>
+    <a class="btn" href="wallet.html">Launch App</a>
+</section>
 
-      <div class="tokenomics">
-        <h2>TOKENOMICS</h2>
-        <h3>HGC Token Distribution</h3>
-        <p>A fixed supply of 21,000,000 HGC — deflationary by design.</p>
-        <ul class="token-list">
-          <li><strong>40%</strong> — Mining Rewards</li>
-          <li><strong>20%</strong> — Ecosystem Fund</li>
-          <li><strong>15%</strong> — Dev & R&D</li>
-          <li><strong>15%</strong> — Validators</li>
-          <li><strong>10%</strong> — Reserve</li>
+<section class="section">
+    <h2>HighCoin Ecosystem</h2>
+    <div class="card">
+        <p>
+            HighCoin is a next‑generation EVM‑compatible blockchain built on the ZDOS modular infrastructure.
+            Powered by Rust, Tokio, ZLang and Hercules UI.
+        </p>
+        <ul>
+            <li>EVM Compatible</li>
+            <li>Secure & Decentralized</li>
+            <li>Native ZLang Runtime</li>
+            <li>Modular ZDOS Architecture</li>
         </ul>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section class="panel" id="wallet">
-      <h2>HIGHCOIN Wallet</h2>
-      <p class="panel-sub">Non-custodial HD wallet — your keys, your coins</p>
-      <div class="wallet-options">
-        <button class="btn-outline">New Wallet</button>
-        <button class="btn-outline">Import</button>
-        <button class="btn-outline">MetaMask</button>
-      </div>
-      <button id="btn-generate-wallet" class="btn btn-yellow wallet-main-btn">Generate New Wallet</button>
-      <p class="panel-note">Keys are generated locally and never leave your device.</p>
-      <div class="wallet-output">
-        <div><strong>Private key (hex):</strong></div>
-        <code id="wallet-privkey"></code>
-      </div>
-    </section>
+<section class="section">
+    <h2>Tokenomics</h2>
+    <div class="card">
+        <p><strong>Max Supply:</strong> 21,000,000 HGC</p>
+        <p>Deflationary by design.</p>
+        <ul>
+            <li>40% — Mining Rewards</li>
+            <li>20% — Ecosystem Fund</li>
+            <li>15% — Dev & R&D</li>
+            <li>15% — Validators</li>
+            <li>10% — Reserve</li>
+        </ul>
+    </div>
+</section>
 
-    <section class="panel" id="miner">
-      <h2>HIGHCOIN WebMiner</h2>
-      <p class="panel-sub">Real SHA-256 Proof-of-Work — runs in your browser</p>
-      <p class="panel-desc">Finds a nonce whose hash starts with 0000.</p>
+<section class="section">
+    <h2>Modules</h2>
 
-      <div class="miner-controls">
-        <label for="difficulty">Difficulty</label>
-        <input type="range" id="difficulty" min="2" max="7" value="4" />
-        <div class="difficulty-labels"><span>Easy (2)</span><span>Hard (7)</span></div>
-        <div class="difficulty-current">Target: <span id="difficulty-zeros">0000… (4 zeros)</span></div>
-      </div>
+    <div class="card">
+        <h3>Wallet</h3>
+        <p>Non‑custodial HD wallet — your keys, your coins.</p>
+        <a class="btn" href="wallet.html">Open Wallet</a>
+    </div>
 
-      <div class="miner-buttons">
-        <button id="btn-start-mining" class="btn btn-yellow">Start Mining</button>
-        <button id="btn-stop-mining" class="btn btn-grey">Stop</button>
-      </div>
+    <div class="card">
+        <h3>Explorer</h3>
+        <p>Live block explorer for HighCoin Mainnet.</p>
+        <a class="btn" href="explorer.html">Open Explorer</a>
+    </div>
 
-      <div class="miner-output">
-        <div><strong>Status:</strong> <span id="miner-status">Idle</span></div>
-        <div><strong>Nonce:</strong> <span id="miner-nonce">-</span></div>
-        <div><strong>Hash:</strong> <code id="miner-hash">-</code></div>
-      </div>
-    </section>
+    <div class="card">
+        <h3>WebMiner</h3>
+        <p>Real SHA‑256 Proof‑of‑Work running in your browser.</p>
+        <a class="btn" href="miner.html">Start Mining</a>
+    </div>
 
-    <section class="panel" id="explorer">
-      <h2>HIGHCOIN Explorer</h2>
-      <p class="panel-sub">Live — HighCoin Mainnet</p>
-      <input type="text" class="explorer-search" placeholder="Block number, hash, tx, address..." />
-      <div class="tabs">
-        <button class="tab active">Blocks</button>
-        <button class="tab">Transactions</button>
-      </div>
-      <div class="explorer-placeholder"><p>Explorer UI placeholder.</p></div>
-    </section>
+    <div class="card">
+        <h3>ZLang Playground</h3>
+        <p>Rust‑powered scripting language for ZDOS automation.</p>
+        <a class="btn" href="zlang.html">Open ZLang</a>
+    </div>
+</section>
 
-    <section class="panel" id="ecosystem">
-      <h2>ECOSYSTEM</h2>
-      <h3>Built on Modular Infrastructure</h3>
-      <p class="panel-desc">HighCoin is part of the ZDOS constellation.</p>
+<footer class="section" style="text-align:center; opacity:0.6;">
+    HighCoin • ZDOS / Z‑GENESIS • Hercules UI v2
+</footer>
 
-      <div class="ecosystem-grid">
-        <div class="eco-card"><h4>Rust / Tokio</h4><h5>HighCoin Node</h5><p>Full node in Rust.</p></div>
-        <div class="eco-card"><h4>CLI</h4><h5>BridgeZ CLI</h5><p>Manage accounts & broadcast tx.</p></div>
-        <div class="eco-card"><h4>Web</h4><h5>Explorer Lite</h5><p>Query blocks & tx.</p></div>
-        <div class="eco-card"><h4>Ecosystem</h4><h5>ZDOS / Z-GENESIS</h5><p>AI automation & Web3 modules.</p></div>
-      </div>
-    </section>
-
-    <section class="panel" id="zlang">
-      <h2>ZLang Playground</h2>
-      <p class="panel-sub">Rust-powered scripting language.</p>
-
-      <div class="playground">
-        <textarea id="zlang-code" class="code-editor">// ZLang - Hello World
-print "Hello, HighCoin!"
-print "Welcome to ZLang v0.4"</textarea>
-        <button id="btn-run-zlang" class="btn btn-yellow">Run</button>
-        <pre id="zlang-output" class="code-output"></pre>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer" id="github">
-    <p>HighCoin • ZDOS / Z-GENESIS • Built with Hercules</p>
-  </footer>
-
-  <script src="assets/js/app.js"></script>
 </body>
 </html>
