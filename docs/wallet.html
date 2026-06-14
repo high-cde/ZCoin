@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>ZDOS Wallet • BIP39 / HD / Passphrase</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -30,9 +29,9 @@
     </select>
 
     <label style="margin-top:12px;">Passphrase BIP39 (opzionale)</label>
-    <input id="passphrase" type="password" placeholder="Lascia vuoto se non usi passphrase">
+    <input id="passphrase" type="password">
 
-    <label style="margin-top:12px;">Indice account (altezza)</label>
+    <label style="margin-top:12px;">Indice account</label>
     <input id="accountIndex" type="number" value="0" min="0">
 
     <label style="margin-top:12px;">Derivation Path</label>
@@ -62,21 +61,12 @@
   ZDOS • Wallet BIP39 / HD — high‑cde
 </footer>
 
-<script src="https://unpkg.com/bip39@3.1.0/dist/index.browser.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="assets/libs/bip39.js"></script>
+<script src="assets/libs/ethers.js"></script>
 
 <script>
 (function(){
   const genBtn = document.getElementById("genSeedBtn");
-  const seedBox = document.getElementById("seedBox");
-  const keysBox = document.getElementById("keysBox");
-
-  const seedText = document.getElementById("seedText");
-  const addrText = document.getElementById("addrText");
-  const privText = document.getElementById("privText");
-
-  const copySeedBtn = document.getElementById("copySeedBtn");
-  const copyPrivBtn = document.getElementById("copyPrivBtn");
 
   function buildPath(base, index) {
     const parts = base.split("/");
@@ -98,21 +88,15 @@
     const hd = ethers.utils.HDNode.fromMnemonic(mnemonic, passphrase).derivePath(finalPath);
     const wallet = new ethers.Wallet(hd.privateKey);
 
-    seedText.textContent = mnemonic;
-    addrText.textContent = wallet.address;
-    privText.textContent = wallet.privateKey;
+    document.getElementById("seedText").textContent = mnemonic;
+    document.getElementById("addrText").textContent = wallet.address;
+    document.getElementById("privText").textContent = wallet.privateKey;
 
-    seedBox.style.display = "block";
-    keysBox.style.display = "block";
-  }
-
-  function copy(text) {
-    navigator.clipboard.writeText(text);
+    document.getElementById("seedBox").style.display = "block";
+    document.getElementById("keysBox").style.display = "block";
   }
 
   genBtn.onclick = generate;
-  copySeedBtn.onclick = () => copy(seedText.textContent);
-  copyPrivBtn.onclick = () => copy(privText.textContent);
 })();
 </script>
 
