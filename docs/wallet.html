@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>ZDOS Wallet • BIP39 / HD / Passphrase</title>
   <link rel="stylesheet" href="assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -29,12 +30,12 @@
     </select>
 
     <label style="margin-top:12px;">Passphrase BIP39 (opzionale)</label>
-    <input id="passphrase" type="password">
+    <input id="passphrase" type="password" placeholder="Lascia vuoto se non usi passphrase">
 
     <label style="margin-top:12px;">Indice account</label>
     <input id="accountIndex" type="number" value="0" min="0">
 
-    <label style="margin-top:12px;">Derivation Path</label>
+    <label style="margin-top:12px;">Derivation Path base</label>
     <input id="pathInput" type="text" value="m/44'/60'/0'/0/0">
 
     <button class="btn" id="genSeedBtn" style="margin-top:20px;">Genera nuovo seed + chiavi</button>
@@ -52,6 +53,9 @@
       <p style="margin-top:12px;"><strong>Private Key:</strong></p>
       <div id="privText" class="mono-box"></div>
       <button class="btn" id="copyPrivBtn">Copia private key</button>
+
+      <p style="margin-top:12px;"><strong>QR Address:</strong></p>
+      <img id="addrQR" alt="QR Address" style="max-width:160px;border-radius:8px;border:1px solid #202234;">
     </div>
 
   </div>
@@ -61,12 +65,18 @@
   ZDOS • Wallet BIP39 / HD — high‑cde
 </footer>
 
-<script src="assets/libs/bip39.js"></script>
-<script src="assets/libs/ethers.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script>
 (function(){
-  const genBtn = document.getElementById("genSeedBtn");
+  const genBtn      = document.getElementById("genSeedBtn");
+  const seedBox     = document.getElementById("seedBox");
+  const keysBox     = document.getElementById("keysBox");
+  const seedText    = document.getElementById("seedText");
+  const addrText    = document.getElementById("addrText");
+  const privText    = document.getElementById("privText");
+  const copySeedBtn = document.getElementById("copySeedBtn");
+  const copyPrivBtn = document.getElementById("copyPrivBtn");
+  const addrQR      = document.getElementById("addrQR");
 
   function buildPath(base, index) {
     const parts = base.split("/");
@@ -75,28 +85,37 @@
   }
 
   async function generate() {
-    const wc = parseInt(document.getElementById("wordCount").value);
-    const strength = wc === 12 ? 128 : 256;
-
-    const mnemonic = bip39.generateMnemonic(strength);
+    const wc         = parseInt(document.getElementById("wordCount").value);
+    const strength   = wc === 12 ? 128 : 256;
+    const entropy    = ethers.utils.randomBytes(strength / 8);
+    const mnemonic   = ethers.utils.entropyToMnemonic(entropy);
     const passphrase = document.getElementById("passphrase").value || "";
-    const index = parseInt(document.getElementById("accountIndex").value);
-    const basePath = document.getElementById("pathInput").value;
+    const index      = parseInt(document.getElementById("accountIndex").value);
+    const basePath   = document.getElementById("pathInput").value.trim() || "m/44'/60'/0'/0/0";
+    const finalPath  = buildPath(basePath, index);
 
-    const finalPath = buildPath(basePath, index);
+    const hd      = ethers.utils.HDNode.fromMnemonic(mnemonic, passphrase).derivePath(finalPath);
+    const wallet  = new ethers.Wallet(hd.privateKey);
 
-    const hd = ethers.utils.HDNode.fromMnemonic(mnemonic, passphrase).derivePath(finalPath);
-    const wallet = new ethers.Wallet(hd.privateKey);
+    seedText.textContent = mnemonic;
+    addrText.textContent = wallet.address;
+    privText.textContent = wallet.privateKey;
 
-    document.getElementById("seedText").textContent = mnemonic;
-    document.getElementById("addrText").textContent = wallet.address;
-    document.getElementById("privText").textContent = wallet.privateKey;
+    const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=" + encodeURIComponent(wallet.address);
+    addrQR.src = qrUrl;
 
-    document.getElementById("seedBox").style.display = "block";
-    document.getElementById("keysBox").style.display = "block";
+    seedBox.style.display = "block";
+    keysBox.style.display = "block";
   }
 
-  genBtn.onclick = generate;
+  function copy(text) {
+    if (!text) return;
+    navigator.clipboard && navigator.clipboard.writeText(text);
+  }
+
+  genBtn.onclick      = generate;
+  copySeedBtn.onclick = () => copy(seedText.textContent);
+  copyPrivBtn.onclick = () => copy(privText.textContent);
 })();
 </script>
 
