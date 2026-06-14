@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>ZDOS Interceptor • Node Map</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
     .node-card {
@@ -60,7 +59,6 @@
 (function(){
   const container = document.getElementById('nodesContainer');
 
-  // MOCK NODES — quando avremo la rete reale, questi verranno sostituiti da fetch()
   let nodes = [
     { name:"Node‑Alpha",   ip:"192.168.1.10", active:false, ping:0 },
     { name:"Node‑Bravo",   ip:"192.168.1.22", active:false, ping:0 },
@@ -89,18 +87,14 @@
     });
   }
 
-  // Simulazione attivazione nodi stile Interceptor
   function randomize() {
     nodes.forEach(n => {
-      // 70% chance di essere attivo
       n.active = Math.random() > 0.3;
-      // ping realistico
       n.ping = n.active ? Math.floor(Math.random()*80)+20 : 0;
     });
     render();
   }
 
-  // Aggiorna ogni 2 secondi
   render();
   setInterval(randomize, 2000);
 })();
