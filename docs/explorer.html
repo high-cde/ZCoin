@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>ZDOS Explorer (mock)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <title>HighCoin Explorer • ZDOS</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -14,31 +13,68 @@
   <a href="explorer.html">Explorer</a>
   <a href="miner.html">Miner</a>
   <a href="zlang.html">Z‑Lang</a>
+  <a href="roadmap.html">Roadmap</a>
+  <a href="nodes.html">Nodes</a>
 </nav>
 
 <section class="section">
-  <h2>Explorer (mock)</h2>
+  <h2>HighCoin Explorer • Nodo client-side</h2>
   <div class="card">
-    <p>Tabella statica di blocchi/tx, pronta per essere collegata a un backend reale.</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Height</th>
-          <th>Hash</th>
-          <th>Tx</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>#100</td><td>0xabc...001</td><td>12</td></tr>
-        <tr><td>#99</td><td>0xabc...0ff</td><td>8</td></tr>
-        <tr><td>#98</td><td>0xabc...0aa</td><td>5</td></tr>
-      </tbody>
-    </table>
+    <p>Explorer collegato al nodo HighCoin client-side (in-memory). Nessun backend, tutto nel browser.</p>
+    <p><strong>Altezza chain:</strong> <span id="height">-</span></p>
+    <p><strong>Ultimo blocco hash:</strong> <span id="lastHash">-</span></p>
+    <p><strong>Mempool TX:</strong> <span id="mempoolCount">0</span></p>
   </div>
 </section>
 
+<section class="section">
+  <h2>Blocchi recenti</h2>
+  <div class="card" id="blocks"></div>
+</section>
+
 <footer>
-  ZDOS • Explorer mock — high‑cde
+  HighCoin • Explorer client-side — high‑cde
 </footer>
+
+<script src="assets/js/highcoin-node.js"></script>
+<script src="assets/js/highcoin-runtime.js"></script>
+<script>
+(async function(){
+  const heightEl = document.getElementById('height');
+  const lastHashEl = document.getElementById('lastHash');
+  const mempoolEl = document.getElementById('mempoolCount');
+  const blocksEl = document.getElementById('blocks');
+
+  async function refresh() {
+    const h = await HighCoinRPC.call("hc_getHeight");
+    const latest = await HighCoinRPC.call("hc_getLatestBlock");
+    const chain = await HighCoinRPC.call("hc_getChain");
+    const mempool = await HighCoinRPC.call("hc_getMempool");
+
+    heightEl.textContent = h;
+    lastHashEl.textContent = latest ? latest.hash : "-";
+    mempoolEl.textContent = mempool.length;
+
+    blocksEl.innerHTML = "";
+    chain.slice().reverse().slice(0,10).forEach(b => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.style.marginBottom = "10px";
+      div.innerHTML = `
+        <p><strong>Index:</strong> ${b.index}</p>
+        <p><strong>Hash:</strong> ${b.hash}</p>
+        <p><strong>Prev:</strong> ${b.prevHash}</p>
+        <p><strong>TX:</strong> ${b.txs.length}</p>
+        <p><strong>Miner:</strong> ${b.miner || "-"}</p>
+      `;
+      blocksEl.appendChild(div);
+    });
+  }
+
+  await HighCoinNode.init();
+  await refresh();
+  setInterval(refresh, 3000);
+})();
+</script>
 </body>
 </html>

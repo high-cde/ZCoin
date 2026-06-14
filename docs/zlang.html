@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Z‑Lang Terminal • ZDOS% + WASM Stub</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <title>Z‑Lang Terminal • ZDOS% + HighCoin RPC</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
     .terminal {
@@ -29,9 +28,7 @@
       font-size:.9rem;
       margin-top:10px;
     }
-    .prompt {
-      color:#00ffc3;
-    }
+    .prompt { color:#00ffc3; }
   </style>
 </head>
 <body>
@@ -42,15 +39,14 @@
   <a href="miner.html">Miner</a>
   <a href="zlang.html">Z‑Lang</a>
   <a href="roadmap.html">Roadmap</a>
+  <a href="nodes.html">Nodes</a>
 </nav>
 
 <section class="section">
-  <h2>Z‑Lang Terminal • ZDOS% • WASM Stub</h2>
+  <h2>Z‑Lang Terminal • ZDOS% • HighCoin RPC</h2>
   <div class="card">
-    <p>Terminale interattivo ZDOS%. Runtime Z‑Lang collegato a un loader WASM stub. Quando il file <code>assets/js/zlang.wasm</code> sarà pronto, il terminale userà l’engine reale.</p>
-
+    <p>Terminale ZDOS% con comandi Z‑Lang mock e accesso diretto al nodo HighCoin client-side.</p>
     <div id="terminal" class="terminal"></div>
-
     <div style="margin-top:10px;">
       <span class="prompt">zdos%</span>
       <input id="termInput" class="term-input" autofocus autocomplete="off">
@@ -59,23 +55,23 @@
 </section>
 
 <footer>
-  ZDOS • Z‑Lang Terminal + WASM stub — high‑cde
+  ZDOS • Z‑Lang + HighCoin RPC — high‑cde
 </footer>
 
-<script src="assets/js/zlang-runtime.js"></script>
+<script src="assets/js/highcoin-node.js"></script>
+<script src="assets/js/highcoin-runtime.js"></script>
 <script>
 (function(){
   const term  = document.getElementById('terminal');
   const input = document.getElementById('termInput');
 
   function print(text, color="#00eaff") {
-    const lines = String(text).split("\\n");
-    for (const t of lines) {
+    String(text).split("\\n").forEach(t => {
       const line = document.createElement('div');
       line.style.color = color;
       line.textContent = t;
       term.appendChild(line);
-    }
+    });
     term.scrollTop = term.scrollHeight;
   }
 
@@ -86,13 +82,13 @@
     switch(base) {
       case "help":
         print("Comandi disponibili:");
-        print("  help              - mostra i comandi");
-        print("  clear             - pulisce il terminale");
-        print("  echo [txt]        - stampa testo");
-        print("  zlang [code]      - esegue codice Z-Lang via runtime");
-        print("  sys.info          - info runtime Z-Lang (via WASM stub)");
-        print("  wallet.new        - genera chiave mock via Z-Lang runtime");
-        print("  miner.test        - test PoW mock via Z-Lang runtime");
+        print("  help                 - mostra i comandi");
+        print("  clear                - pulisce il terminale");
+        print("  echo [txt]           - stampa testo");
+        print("  hc.height            - altezza chain HighCoin");
+        print("  hc.latest            - ultimo blocco");
+        print("  hc.balance [addr]    - balance address");
+        print("  hc.mine [addr]       - mina un blocco per addr");
         break;
 
       case "clear":
@@ -103,44 +99,26 @@
         print(parts.slice(1).join(" "));
         break;
 
-      case "zlang":
-        const code = parts.slice(1).join(" ");
-        if (!code) { print("Uso: zlang [codice]"); break; }
-        try {
-          const out = await ZLangRuntime.run(code);
-          print(out, "#00ffc3");
-        } catch (e) {
-          print("Errore runtime Z-Lang: " + e.message, "#ff4b81");
-        }
+      case "hc.height":
+        print("Altezza chain: " + await HighCoinRPC.call("hc_getHeight"), "#00ffc3");
         break;
 
-      case "sys.info":
-        try {
-          const out = await ZLangRuntime.sysInfo();
-          print(out, "#00ffc3");
-        } catch (e) {
-          print("Errore sys.info: " + e.message, "#ff4b81");
-        }
+      case "hc.latest":
+        const b = await HighCoinRPC.call("hc_getLatestBlock");
+        print(JSON.stringify(b, null, 2), "#00ffc3");
         break;
 
-      case "wallet.new":
-        try {
-          const w = await ZLangRuntime.walletNew();
-          print("Private key (mock):", "#00ffc3");
-          print(w.privateKey, "#00ffc3");
-          print(w.note, "#9a9ab0");
-        } catch (e) {
-          print("Errore wallet.new: " + e.message, "#ff4b81");
-        }
+      case "hc.balance":
+        const addr = parts[1] || "miner-local";
+        const bal = await HighCoinRPC.call("hc_getBalance", [addr]);
+        print(`Balance ${addr}: ${bal}`, "#00ffc3");
         break;
 
-      case "miner.test":
-        try {
-          const out = await ZLangRuntime.minerTest();
-          print(out, "#00ffc3");
-        } catch (e) {
-          print("Errore miner.test: " + e.message, "#ff4b81");
-        }
+      case "hc.mine":
+        const miner = parts[1] || "miner-local";
+        print("Mining block per " + miner + "...", "#9a9ab0");
+        const nb = await HighCoinRPC.call("hc_mineBlock", [miner, 3]);
+        print("Blocco minato: #" + nb.index + " hash=" + nb.hash, "#00ffc3");
         break;
 
       default:
@@ -158,9 +136,8 @@
     }
   });
 
-  print("ZDOS% Terminal pronto.");
+  print("ZDOS% Terminal collegato al nodo HighCoin client-side.");
   print("Digita 'help' per i comandi.");
-  print("Quando zlang.wasm sarà collegato, il runtime passerà da MOCK a REALE.");
 })();
 </script>
 </body>
