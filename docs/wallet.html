@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>ZDOS Wallet (demo)</title>
+  <title>ZDOS Wallet • BIP39</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -17,18 +17,72 @@
 </nav>
 
 <section class="section">
-  <h2>Wallet (demo)</h2>
+  <h2>Wallet ZDOS • Seed BIP39</h2>
   <div class="card">
-    <p>UI dimostrativa, nessuna chiave reale, nessuna connessione chain.</p>
-    <p style="font-family:'Roboto Mono',monospace;font-size:.9rem;">
-      Address: 0xHIGHCDEDEMO000000000000000000000000000000<br>
-      Balance: 0.0000 HGC
-    </p>
+    <p><strong>ATTENZIONE:</strong> questa pagina genera un seed BIP39 reale nel browser. Non fare screenshot, non condividere, non salvare in chiaro.</p>
+
+    <div style="margin-top:16px;">
+      <label for="wordCount" style="font-size:.9rem;opacity:.9;">Numero parole</label><br>
+      <select id="wordCount" style="max-width:140px;margin-top:4px;">
+        <option value="12">12 parole</option>
+        <option value="24">24 parole</option>
+      </select>
+    </div>
+
+    <button class="btn" id="genSeedBtn" style="margin-top:16px;">Genera nuovo seed</button>
+
+    <div id="seedBox" style="margin-top:20px;display:none;">
+      <p style="font-size:.9rem;opacity:.9;margin-bottom:6px;">Seed BIP39:</p>
+      <div id="seedText" style="font-family:'Roboto Mono',monospace;font-size:.9rem;border:1px solid #202234;border-radius:8px;padding:12px;word-wrap:break-word;"></div>
+      <button class="btn" id="copySeedBtn" style="margin-top:12px;">Copia seed</button>
+    </div>
+
+    <div style="margin-top:20px;font-size:.85rem;opacity:.8;">
+      <p>Linee guida operative:</p>
+      <ul>
+        <li>Scrivi il seed su carta, non in foto.</li>
+        <li>Non inserire mai il seed in siti o app non verificate.</li>
+        <li>Chi possiede il seed controlla i fondi.</li>
+      </ul>
+    </div>
   </div>
 </section>
 
 <footer>
-  ZDOS • Wallet demo — high‑cde
+  ZDOS • Wallet BIP39 — high‑cde
 </footer>
+
+<script src="https://unpkg.com/bip39@3.1.0/dist/index.browser.js"></script>
+<script>
+(function(){
+  const genBtn = document.getElementById('genSeedBtn');
+  const copyBtn = document.getElementById('copySeedBtn');
+  const seedBox = document.getElementById('seedBox');
+  const seedText = document.getElementById('seedText');
+  const wordCountSel = document.getElementById('wordCount');
+
+  function generateSeed() {
+    const wc = parseInt(wordCountSel.value, 10);
+    const strength = (wc === 12) ? 128 : 256; // 12 parole = 128 bit, 24 = 256
+    const mnemonic = bip39.generateMnemonic(strength);
+    seedText.textContent = mnemonic;
+    seedBox.style.display = 'block';
+  }
+
+  function copySeed() {
+    const text = seedText.textContent.trim();
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(()=>{
+      copyBtn.textContent = 'Copiato';
+      setTimeout(()=>{ copyBtn.textContent = 'Copia seed'; }, 1500);
+    }).catch(()=>{
+      alert('Impossibile copiare automaticamente. Copia manualmente il seed.');
+    });
+  }
+
+  genBtn.addEventListener('click', generateSeed);
+  copyBtn.addEventListener('click', copySeed);
+})();
+</script>
 </body>
 </html>
