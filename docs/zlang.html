@@ -3,9 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Z‑Lang Playground (mock)</title>
+  <title>Z‑Lang Terminal • ZDOS%</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .terminal {
+      background:#000000cc;
+      border:1px solid #202234;
+      border-radius:10px;
+      padding:20px;
+      height:420px;
+      overflow-y:auto;
+      font-family:'Roboto Mono',monospace;
+      font-size:.9rem;
+      color:#00eaff;
+      box-shadow:0 0 20px #00eaff33;
+    }
+    .term-input {
+      width:100%;
+      background:transparent;
+      border:none;
+      outline:none;
+      color:#00ffc3;
+      font-family:'Roboto Mono',monospace;
+      font-size:.9rem;
+      margin-top:10px;
+    }
+    .prompt {
+      color:#00ffc3;
+    }
+  </style>
 </head>
 <body>
 <nav class="navbar">
@@ -17,18 +44,108 @@
 </nav>
 
 <section class="section">
-  <h2>Z‑Lang Playground (mock)</h2>
+  <h2>Z‑Lang Terminal • ZDOS%</h2>
   <div class="card">
-    <p>Area test per snippet Z‑Lang (solo UI, nessun parser reale collegato).</p>
-    <p style="font-family:'Roboto Mono',monospace;font-size:.9rem;">
-      // TODO: collegare runtime Z‑Lang<br>
-// per ora, solo mock UI.
-    </p>
+    <p>Terminale interattivo stile ZDOS. Engine Z‑Lang mock integrato. WASM engine reale in arrivo.</p>
+
+    <div id="terminal" class="terminal"></div>
+
+    <div style="margin-top:10px;">
+      <span class="prompt">zdos%</span>
+      <input id="termInput" class="term-input" autofocus autocomplete="off">
+    </div>
   </div>
 </section>
 
 <footer>
-  ZDOS • Z‑Lang mock — high‑cde
+  ZDOS • Z‑Lang Terminal — high‑cde
 </footer>
+
+<script>
+(function(){
+  const term = document.getElementById('terminal');
+  const input = document.getElementById('termInput');
+
+  function print(text, color="#00eaff") {
+    const line = document.createElement('div');
+    line.style.color = color;
+    line.textContent = text;
+    term.appendChild(line);
+    term.scrollTop = term.scrollHeight;
+  }
+
+  function exec(cmd) {
+    const parts = cmd.trim().split(" ");
+    const base = parts[0];
+
+    // MOCK ENGINE — reale in WASM nel prossimo step
+    switch(base) {
+
+      case "help":
+        print("Comandi disponibili:");
+        print("  help           - mostra i comandi");
+        print("  clear          - pulisce il terminale");
+        print("  echo [txt]     - stampa testo");
+        print("  hash [txt]     - SHA-256 del testo");
+        print("  sys.info       - info ambiente ZDOS");
+        print("  wallet.new     - genera address mock");
+        print("  miner.test     - test PoW mock");
+        break;
+
+      case "clear":
+        term.innerHTML = "";
+        break;
+
+      case "echo":
+        print(parts.slice(1).join(" "));
+        break;
+
+      case "hash":
+        const msg = parts.slice(1).join(" ");
+        if (!msg) { print("Uso: hash [testo]"); break; }
+        crypto.subtle.digest("SHA-256", new TextEncoder().encode(msg))
+          .then(buf => {
+            const hex = Array.from(new Uint8Array(buf))
+              .map(b=>b.toString(16).padStart(2,"0")).join("");
+            print(hex);
+          });
+        break;
+
+      case "sys.info":
+        print("ZDOS Terminal v1.0");
+        print("Z‑Lang Engine: MOCK");
+        print("Runtime: Browser JS");
+        print("WASM Engine: pending");
+        break;
+
+      case "wallet.new":
+        const pk = crypto.getRandomValues(new Uint8Array(32));
+        const hexpk = Array.from(pk).map(b=>b.toString(16).padStart(2,"0")).join("");
+        print("Private key mock:");
+        print(hexpk, "#00ffc3");
+        break;
+
+      case "miner.test":
+        print("Eseguo test PoW...");
+        setTimeout(()=>print("Hashrate mock: 512 H/s"), 500);
+        break;
+
+      default:
+        print("Comando non riconosciuto: " + base, "#ff4b81");
+    }
+  }
+
+  input.addEventListener("keydown", (e)=>{
+    if (e.key === "Enter") {
+      const cmd = input.value.trim();
+      print("zdos% " + cmd, "#00ffc3");
+      exec(cmd);
+      input.value = "";
+    }
+  });
+
+  print("ZDOS Terminal pronto. Digita 'help' per i comandi.");
+})();
+</script>
 </body>
 </html>
