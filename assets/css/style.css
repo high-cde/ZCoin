@@ -1,0 +1,90 @@
+// Wallet
+const btnGenerateWallet = document.getElementById("btn-generate-wallet");
+const walletPrivKeyEl = document.getElementById("wallet-privkey");
+
+if (btnGenerateWallet) {
+  btnGenerateWallet.addEventListener("click", () => {
+    const bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    walletPrivKeyEl.textContent = Array.from(bytes)
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+  });
+}
+
+// Miner
+const diffSlider = document.getElementById("difficulty");
+const diffZerosEl = document.getElementById("difficulty-zeros");
+const btnStartMining = document.getElementById("btn-start-mining");
+const btnStopMining = document.getElementById("btn-stop-mining");
+const minerStatusEl = document.getElementById("miner-status");
+const minerNonceEl = document.getElementById("miner-nonce");
+const minerHashEl = document.getElementById("miner-hash");
+
+let mining = false;
+
+function updateDifficultyLabel() {
+  const zeros = parseInt(diffSlider.value);
+  diffZerosEl.textContent = "0".repeat(zeros) + "… (" + zeros + " zeros)";
+}
+
+async function sha256Hex(str) {
+  const data = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function mine() {
+  const zeros = parseInt(diffSlider.value);
+  const target = "0".repeat(zeros);
+  mining = true;
+  minerStatusEl.textContent = "Mining...";
+  let nonce = 0;
+
+  while (mining) {
+    const hash = await sha256Hex("highcoin-block-" + nonce);
+    if (hash.startsWith(target)) {
+      minerStatusEl.textContent = "Found valid nonce";
+      minerNonceEl.textContent = nonce;
+      minerHashEl.textContent = hash;
+      mining = false;
+      break;
+    }
+    nonce++;
+    if (nonce % 1000 === 0) await new Promise(r => setTimeout(r, 0));
+  }
+}
+
+diffSlider.addEventListener("input", updateDifficultyLabel);
+updateDifficultyLabel();
+
+btnStartMining.addEventListener("click", () => {
+  if (!mining) mine();
+});
+
+btnStopMining.addEventListener("click", () => {
+  mining = false;
+  minerStatusEl.textContent = "Stopped";
+});
+
+// ZLang Playground
+const btnRunZlang = document.getElementById("btn-run-zlang");
+const zlangCodeEl = document.getElementById("zlang-code");
+const zlangOutputEl = document.getElementById("zlang-output");
+
+btnRunZlang.addEventListener("click", () => {
+  const lines = zlangCodeEl.value.split("\n");
+  const out = [];
+
+  for (const line of lines) {
+    const t = line.trim();
+    if (t.startsWith("print ")) {
+      const m = t.slice(5).trim().match(/^"(.+)"$/);
+      if (m) out.push(m[1]);
+    }
+  }
+
+  zlangOutputEl.textContent = out.join("\n") || "(no output)";
+});
