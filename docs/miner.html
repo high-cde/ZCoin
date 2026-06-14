@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>ZDOS Miner (demo)</title>
+  <title>ZDOS Miner • SHA‑256 Web</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -17,42 +17,169 @@
 </nav>
 
 <section class="section">
-  <h2>Web Miner (demo)</h2>
+  <h2>ZDOS Web Miner • SHA‑256</h2>
   <div class="card">
-    <p>Loop di mining simulato in JavaScript. Nessuna chain reale, solo showcase.</p>
-    <button class="btn" id="startMiner">Start</button>
-    <button class="btn" id="stopMiner" style="margin-left:10px;background:transparent;border:1px solid #00eaff;color:#00eaff;box-shadow:none;">Stop</button>
-    <p style="margin-top:16px;font-family:'Roboto Mono',monospace;font-size:.9rem;">
-      Hashes: <span id="hashCount">0</span><br>
-      Stato: <span id="minerStatus">idle</span>
-    </p>
+    <p>Motore di hashing reale in JavaScript + WebWorker. Nessuna chain collegata (ancora), solo PoW engine.</p>
+
+    <div style="margin-top:16px;">
+      <label for="threads" style="font-size:.9rem;opacity:.9;">Thread (worker)</label><br>
+      <input id="threads" type="number" value="2" min="1" max="8" style="max-width:100px;margin-top:4px;">
+    </div>
+
+    <div style="margin-top:16px;">
+      <label for="difficulty" style="font-size:.9rem;opacity:.9;">Difficoltà (zeri iniziali nel target)</label><br>
+      <input id="difficulty" type="number" value="4" min="1" max="7" style="max-width:100px;margin-top:4px;">
+      <p style="font-size:.8rem;opacity:.7;margin-top:4px;">
+        Più alta la difficoltà, più rari i “blocchi trovati”.
+      </p>
+    </div>
+
+    <button class="btn" id="startMiner" style="margin-top:16px;">Start miner</button>
+    <button class="btn" id="stopMiner" style="margin-top:16px;margin-left:10px;background:transparent;border:1px solid #00eaff;color:#00eaff;box-shadow:none;">Stop</button>
+
+    <div style="margin-top:20px;font-family:'Roboto Mono',monospace;font-size:.9rem;">
+      Stato: <span id="minerStatus">idle</span><br>
+      Thread attivi: <span id="activeThreads">0</span><br>
+      Hash totali: <span id="hashCount">0</span><br>
+      Hashrate stimato: <span id="hashRate">0</span> H/s<br>
+      Blocchi trovati (mock): <span id="blocksFound">0</span><br>
+      Ultimo nonce: <span id="lastNonce">-</span>
+    </div>
   </div>
 </section>
 
 <footer>
-  ZDOS • Miner demo — high‑cde
+  ZDOS • Web Miner SHA‑256 — high‑cde
 </footer>
 
 <script>
-let minerInterval=null;
-let hashes=0;
-const hashSpan=document.getElementById('hashCount');
-const statusSpan=document.getElementById('minerStatus');
-document.getElementById('startMiner').onclick=()=>{
-  if(minerInterval) return;
-  statusSpan.textContent='running';
-  minerInterval=setInterval(()=>{
-    hashes+=Math.floor(Math.random()*50)+10;
-    hashSpan.textContent=hashes;
-  },200);
-};
-document.getElementById('stopMiner').onclick=()=>{
-  if(minerInterval){
-    clearInterval(minerInterval);
-    minerInterval=null;
-    statusSpan.textContent='stopped';
+(function(){
+  const startBtn      = document.getElementById('startMiner');
+  const stopBtn       = document.getElementById('stopMiner');
+  const statusSpan    = document.getElementById('minerStatus');
+  const threadsInput  = document.getElementById('threads');
+  const diffInput     = document.getElementById('difficulty');
+  const activeThreads = document.getElementById('activeThreads');
+  const hashCountSpan = document.getElementById('hashCount');
+  const hashRateSpan  = document.getElementById('hashRate');
+  const blocksSpan    = document.getElementById('blocksFound');
+  const lastNonceSpan = document.getElementById('lastNonce');
+
+  let workers = [];
+  let totalHashes = 0;
+  let blocksFound = 0;
+  let lastNonce = 0;
+  let lastUpdateTime = Date.now();
+  let lastUpdateHashes = 0;
+  let statsTimer = null;
+
+  // Worker inline via Blob (niente file esterni)
+  const workerCode = `
+    self.addEventListener('message', async (e) => {
+      const { cmd, difficulty } = e.data;
+      if (cmd === 'start') {
+        let hashes = 0;
+        let blocks = 0;
+        let nonce = 0;
+
+        function toHex(buffer) {
+          return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2,'0')).join('');
+        }
+
+        async function loop() {
+          while (true) {
+            const data = new TextEncoder().encode('ZDOS-HIGHCOIN-' + nonce);
+            const hashBuf = await crypto.subtle.digest('SHA-256', data);
+            const hex = toHex(hashBuf);
+            hashes++;
+            if (hex.startsWith('0'.repeat(difficulty))) {
+              blocks++;
+              self.postMessage({ type: 'block', nonce, hash: hex });
+            }
+            if (hashes % 1000 === 0) {
+              self.postMessage({ type: 'stats', hashes, nonce });
+            }
+            nonce++;
+          }
+        }
+
+        loop();
+      }
+    });
+  `;
+
+  const blob = new Blob([workerCode], { type: 'application/javascript' });
+  const workerURL = URL.createObjectURL(blob);
+
+  function startMiner() {
+    if (workers.length > 0) return;
+
+    const threads = Math.max(1, Math.min(8, parseInt(threadsInput.value || '1', 10)));
+    const difficulty = Math.max(1, Math.min(7, parseInt(diffInput.value || '4', 10)));
+
+    totalHashes = 0;
+    blocksFound = 0;
+    lastNonce = 0;
+    hashCountSpan.textContent = '0';
+    hashRateSpan.textContent  = '0';
+    blocksSpan.textContent    = '0';
+    lastNonceSpan.textContent = '-';
+
+    for (let i = 0; i < threads; i++) {
+      const w = new Worker(workerURL);
+      w.onmessage = (e) => {
+        const msg = e.data;
+        if (msg.type === 'stats') {
+          totalHashes += msg.hashes;
+          lastNonce = msg.nonce;
+        } else if (msg.type === 'block') {
+          blocksFound++;
+          lastNonce = msg.nonce;
+        }
+      };
+      w.postMessage({ cmd: 'start', difficulty });
+      workers.push(w);
+    }
+
+    activeThreads.textContent = String(threads);
+    statusSpan.textContent = 'running';
+
+    lastUpdateTime = Date.now();
+    lastUpdateHashes = 0;
+
+    if (statsTimer) clearInterval(statsTimer);
+    statsTimer = setInterval(updateStats, 1000);
   }
-};
+
+  function stopMiner() {
+    workers.forEach(w => w.terminate());
+    workers = [];
+    activeThreads.textContent = '0';
+    statusSpan.textContent = 'stopped';
+    if (statsTimer) {
+      clearInterval(statsTimer);
+      statsTimer = null;
+    }
+  }
+
+  function updateStats() {
+    const now = Date.now();
+    const deltaTime = (now - lastUpdateTime) / 1000;
+    const deltaHashes = totalHashes - lastUpdateHashes;
+    const hps = deltaTime > 0 ? (deltaHashes / deltaTime) : 0;
+
+    hashCountSpan.textContent = String(totalHashes);
+    hashRateSpan.textContent  = hps.toFixed(0);
+    blocksSpan.textContent    = String(blocksFound);
+    lastNonceSpan.textContent = String(lastNonce);
+
+    lastUpdateTime = now;
+    lastUpdateHashes = totalHashes;
+  }
+
+  startBtn.addEventListener('click', startMiner);
+  stopBtn.addEventListener('click', stopMiner);
+})();
 </script>
 </body>
 </html>
