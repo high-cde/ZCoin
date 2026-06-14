@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>ZDOS Wallet • BIP39 / HD</title>
+  <title>ZDOS Wallet • BIP39 / HD / Passphrase</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -17,7 +17,7 @@
 </nav>
 
 <section class="section">
-  <h2>Wallet ZDOS • Seed BIP39 + HD</h2>
+  <h2>Wallet ZDOS • Seed BIP39 + HD + Passphrase</h2>
   <div class="card">
     <p><strong>ATTENZIONE:</strong> questo wallet genera seed, chiavi private e address reali nel browser. Non fare screenshot, non condividere, non incollare in chat/app di terzi.</p>
 
@@ -27,6 +27,14 @@
         <option value="12">12 parole</option>
         <option value="24">24 parole</option>
       </select>
+    </div>
+
+    <div style="margin-top:16px;">
+      <label for="passphrase" style="font-size:.9rem;opacity:.9;">Passphrase BIP39 (opzionale)</label><br>
+      <input id="passphrase" type="password" placeholder="Lascia vuoto se non usi passphrase" style="margin-top:4px;">
+      <p style="font-size:.8rem;opacity:.7;margin-top:4px;">
+        mnemonic + passphrase = seed diverso. Se la dimentichi, i fondi sono persi.
+      </p>
     </div>
 
     <div style="margin-top:16px;">
@@ -45,7 +53,7 @@
     <button class="btn" id="genSeedBtn" style="margin-top:16px;">Genera nuovo seed + chiavi</button>
 
     <div id="seedBox" style="margin-top:20px;display:none;">
-      <p style="font-size:.9rem;opacity:.9;margin-bottom:6px;">Seed BIP39:</p>
+      <p style="font-size:.9rem;opacity:.9;margin-bottom:6px;">Seed BIP39 (mnemonic):</p>
       <div id="seedText" style="font-family:'Roboto Mono',monospace;font-size:.9rem;border:1px solid #202234;border-radius:8px;padding:12px;word-wrap:break-word;"></div>
       <button class="btn" id="copySeedBtn" style="margin-top:12px;">Copia seed</button>
     </div>
@@ -54,7 +62,8 @@
       <p style="font-size:.9rem;opacity:.9;margin-bottom:6px;">Derivazione HD:</p>
       <p style="font-family:'Roboto Mono',monospace;font-size:.85rem;">
         Path: <span id="derivedPath"></span><br>
-        Index: <span id="derivedIndex"></span>
+        Index: <span id="derivedIndex"></span><br>
+        Passphrase usata: <span id="usedPassphrase"></span>
       </p>
 
       <p style="font-size:.9rem;opacity:.9;margin-top:10px;margin-bottom:4px;">Address:</p>
@@ -69,35 +78,37 @@
     <div style="margin-top:24px;font-size:.85rem;opacity:.8;">
       <p>Linee guida operative:</p>
       <ul>
-        <li>Scrivi seed e private key su carta, non in foto.</li>
-        <li>Non inserire mai seed/private key in siti o app non verificate.</li>
-        <li>Per HighCoin, questo schema HD è compatibile con EVM‑like (path 60').</li>
+        <li>Scrivi seed, passphrase e private key su carta, non in foto.</li>
+        <li>Passphrase BIP39 ≠ password di login: è parte del seed.</li>
+        <li>Seed senza passphrase e seed con passphrase generano chiavi diverse.</li>
       </ul>
     </div>
   </div>
 </section>
 
 <footer>
-  ZDOS • Wallet BIP39 / HD — high‑cde
+  ZDOS • Wallet BIP39 / HD / Passphrase — high‑cde
 </footer>
 
 <script src="https://unpkg.com/bip39@3.1.0/dist/index.browser.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script>
 (function(){
-  const genBtn      = document.getElementById('genSeedBtn');
-  const copySeedBtn = document.getElementById('copySeedBtn');
-  const copyPrivBtn = document.getElementById('copyPrivBtn');
-  const seedBox     = document.getElementById('seedBox');
-  const keysBox     = document.getElementById('keysBox');
-  const seedText    = document.getElementById('seedText');
-  const addrText    = document.getElementById('addrText');
-  const privText    = document.getElementById('privText');
-  const derivedPath = document.getElementById('derivedPath');
-  const derivedIndex= document.getElementById('derivedIndex');
-  const wordCountSel= document.getElementById('wordCount');
-  const pathInput   = document.getElementById('pathInput');
-  const accountIndex= document.getElementById('accountIndex');
+  const genBtn       = document.getElementById('genSeedBtn');
+  const copySeedBtn  = document.getElementById('copySeedBtn');
+  const copyPrivBtn  = document.getElementById('copyPrivBtn');
+  const seedBox      = document.getElementById('seedBox');
+  const keysBox      = document.getElementById('keysBox');
+  const seedText     = document.getElementById('seedText');
+  const addrText     = document.getElementById('addrText');
+  const privText     = document.getElementById('privText');
+  const derivedPath  = document.getElementById('derivedPath');
+  const derivedIndex = document.getElementById('derivedIndex');
+  const usedPass     = document.getElementById('usedPassphrase');
+  const wordCountSel = document.getElementById('wordCount');
+  const pathInput    = document.getElementById('pathInput');
+  const accountIndex = document.getElementById('accountIndex');
+  const passphraseEl = document.getElementById('passphrase');
 
   function buildPath(basePath, index) {
     const parts = basePath.split('/');
@@ -113,13 +124,15 @@
     const idx = parseInt(accountIndex.value || '0', 10);
     const basePath = pathInput.value.trim() || "m/44'/60'/0'/0/0";
     const finalPath = buildPath(basePath, idx);
+    const passphrase = passphraseEl.value || "";
 
     let wallet;
     try {
-      const hdnode = ethers.utils.HDNode.fromMnemonic(mnemonic).derivePath(finalPath);
+      const hdnode = ethers.utils.HDNode.fromMnemonic(mnemonic, passphrase).derivePath(finalPath);
       wallet = new ethers.Wallet(hdnode.privateKey);
     } catch (e) {
-      alert("Errore nella derivazione HD. Controlla il path.");
+      alert("Errore nella derivazione HD. Controlla path e passphrase.");
+      console.error(e);
       return;
     }
 
@@ -128,16 +141,20 @@
 
     derivedPath.textContent  = finalPath;
     derivedIndex.textContent = idx;
+    usedPass.textContent     = passphrase ? '(impostata)' : '(vuota)';
     addrText.textContent     = wallet.address;
     privText.textContent     = wallet.privateKey;
     keysBox.style.display    = 'block';
   }
 
   function copy(text, btn, label) {
+    if (!text) return;
     navigator.clipboard.writeText(text).then(()=>{
       const old = btn.textContent;
       btn.textContent = label;
       setTimeout(()=>{ btn.textContent = old; }, 1500);
+    }).catch(()=>{
+      alert('Impossibile copiare automaticamente. Copia manualmente.');
     });
   }
 
